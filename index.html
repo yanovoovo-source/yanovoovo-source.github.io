@@ -11,7 +11,7 @@
 </head>
 <body data-theme="bamboo">
     <div class="world" aria-hidden="true">
-        <div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div><div class="mood-particles" id="moodParticles"></div>
+        <div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div>
         <div class="bamboo-grove bamboo-left">
             <span class="stalk" style="--x:4%;--h:72%;--r:-5deg"><i></i><i></i><i></i></span>
             <span class="stalk" style="--x:25%;--h:87%;--r:2deg"><i></i><i></i><i></i></span>
@@ -30,6 +30,7 @@
         <div class="mist mist-one"></div><div class="mist mist-two"></div>
         <div class="petals"></div>
     </div>
+    <div class="mood-particles mood-particles-overlay" id="moodParticles" aria-hidden="true"></div>
 
     <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换心境与天气：当前为清晨竹影">
         <span id="moodIcon" aria-hidden="true">☼</span><span id="moodName">清晨竹影</span>
@@ -50,6 +51,12 @@
             <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
         </div>
         <div class="hero-scene" aria-hidden="true">
+            <div class="wuxia-stilllife">
+                <span class="still-bamboo still-bamboo-one"></span>
+                <span class="still-bamboo still-bamboo-two"></span>
+                <span class="still-hat"></span>
+                <span class="still-sword"></span>
+            </div>
             <div class="scene-plate">
                 <span class="scene-index">MOOD / 01</span>
                 <strong id="sceneMood">清晨竹影</strong>

@@ -9,16 +9,21 @@ const fortunes=["此事宜缓行。风来之前，先把剑擦亮。","山重水
 const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodIcon=document.querySelector("#moodIcon"),moodName=document.querySelector("#moodName"),sceneMood=document.querySelector("#sceneMood"),sceneLine=document.querySelector("#sceneLine"),particleField=document.querySelector("#moodParticles"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
 if(particleField){
     const fragment=document.createDocumentFragment();
-    for(let i=0;i<38;i++){
+    const particleCount=window.matchMedia("(max-width:760px)").matches?48:76;
+    for(let i=0;i<particleCount;i++){
         const particle=document.createElement("span");
         particle.style.setProperty("--x",`${Math.round(Math.random()*100)}%`);
-        particle.style.setProperty("--y",`${Math.round(Math.random()*100)}%`);
-        particle.style.setProperty("--size",`${(1.5+Math.random()*4).toFixed(1)}px`);
-        particle.style.setProperty("--length",`${Math.round(12+Math.random()*24)}px`);
+        particle.style.setProperty("--y",`${Math.round(-8+Math.random()*116)}%`);
+        particle.style.setProperty("--size",`${(1.2+Math.random()*5).toFixed(1)}px`);
+        particle.style.setProperty("--length",`${Math.round(14+Math.random()*32)}px`);
+        particle.style.setProperty("--thickness",`${(.45+Math.random()*.9).toFixed(2)}px`);
+        particle.style.setProperty("--angle",`${Math.round(12+Math.random()*18)}deg`);
         particle.style.setProperty("--alpha",`${(.28+Math.random()*.5).toFixed(2)}`);
-        particle.style.setProperty("--delay",`${(-Math.random()*12).toFixed(2)}s`);
-        particle.style.setProperty("--duration",`${(7+Math.random()*11).toFixed(2)}s`);
-        particle.style.setProperty("--drift",`${Math.round(-42+Math.random()*84)}px`);
+        particle.style.setProperty("--blur",`${(Math.random()*1.1).toFixed(2)}px`);
+        particle.style.setProperty("--delay",`${(-Math.random()*18).toFixed(2)}s`);
+        particle.style.setProperty("--duration",`${(6+Math.random()*17).toFixed(2)}s`);
+        particle.style.setProperty("--drift",`${Math.round(-58+Math.random()*116)}px`);
+        particle.style.setProperty("--fall",`${Math.round(90+Math.random()*120)}px`);
         fragment.appendChild(particle);
     }
     particleField.appendChild(fragment);
