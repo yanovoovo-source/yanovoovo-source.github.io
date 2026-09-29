@@ -6,20 +6,20 @@ let themeTimer;
 function applyTheme(animate=false){
     const t=themes[themeIndex];
     window.clearTimeout(themeTimer);
-    if(!animate){body.dataset.theme=t.id;moodName.textContent=t.name;localStorage.setItem("wulin-mood",t.id);return;}
+    if(!animate){body.dataset.theme=t.id;if(moodName)moodName.textContent=t.name;localStorage.setItem("wulin-mood",t.id);return;}
     body.classList.add("theme-changing");
     themeTimer=window.setTimeout(()=>{
         body.dataset.theme=t.id;
-        moodName.textContent=t.name;
+        if(moodName)moodName.textContent=t.name;
         localStorage.setItem("wulin-mood",t.id);
         window.requestAnimationFrame(()=>body.classList.remove("theme-changing"));
     },220);
 }
 applyTheme();
-moodSwitch.addEventListener("click",()=>{themeIndex=(themeIndex+1)%themes.length;applyTheme(true)});
-enterButton.addEventListener("click",()=>{jianghu.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>jianghu.focus({preventScroll:true}),650)});
-fortuneButton.addEventListener("click",()=>{const choices=fortunes.filter(f=>f!==fortuneText.textContent);fortuneText.textContent=choices[Math.floor(Math.random()*choices.length)]});
-backToTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
-const now=new Date(),formatter=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"long",day:"numeric"});todayLabel.textContent=formatter.format(now);todayLabel.dateTime=now.toISOString().slice(0,10);
+if(moodSwitch)moodSwitch.addEventListener("click",()=>{themeIndex=(themeIndex+1)%themes.length;applyTheme(true)});
+if(enterButton&&jianghu)enterButton.addEventListener("click",()=>{jianghu.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>jianghu.focus({preventScroll:true}),650)});
+if(fortuneButton&&fortuneText)fortuneButton.addEventListener("click",()=>{const choices=fortunes.filter(f=>f!==fortuneText.textContent);fortuneText.textContent=choices[Math.floor(Math.random()*choices.length)]});
+if(backToTop)backToTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+if(todayLabel){const now=new Date(),formatter=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"long",day:"numeric"});todayLabel.textContent=formatter.format(now);todayLabel.dateTime=now.toISOString().slice(0,10);}
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target)}}),{threshold:.12});
 document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
