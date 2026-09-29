@@ -11,7 +11,7 @@
 </head>
 <body data-theme="bamboo">
     <div class="world" aria-hidden="true">
-        <div class="moon"></div><div class="stars"></div>
+        <div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div>
         <div class="bamboo-grove bamboo-left">
             <span class="stalk" style="--x:4%;--h:72%;--r:-5deg"><i></i><i></i><i></i></span>
             <span class="stalk" style="--x:25%;--h:87%;--r:2deg"><i></i><i></i><i></i></span>
@@ -31,7 +31,7 @@
         <div class="petals"></div>
     </div>
 
-    <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换心境背景">
+    <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换心境与天气">
         <span aria-hidden="true">☾</span><span id="moodName">月下竹林</span>
     </button>
 
@@ -50,12 +50,13 @@
             <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
         </div>
         <div class="hero-scene" aria-hidden="true">
-            <div class="scene-moon"></div>
-            <div class="scene-haze"></div>
-            <div class="scene-bamboo scene-bamboo-one"></div>
-            <div class="scene-bamboo scene-bamboo-two"></div>
-            <div class="scene-bamboo scene-bamboo-three"></div>
-            <p class="scene-caption"><span>01</span> 月下竹林</p>
+            <div class="scene-plate">
+                <span class="scene-index">MOOD / 01</span>
+                <strong>月下竹林</strong>
+                <p>风过，竹影没有解释。</p>
+                <div class="scene-rule"></div>
+                <span class="scene-caption">CURRENT ATMOSPHERE</span>
+            </div>
         </div>
     </header>
 
