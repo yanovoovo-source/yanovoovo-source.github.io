@@ -944,3 +944,86 @@ body[data-theme="snow"] .mood-particles span { animation-direction:normal; anima
     .page-index { display:none; }
     .back-home { margin-bottom:1px; }
 }
+
+/* Clearer daylight and dusk: a visible sun, a longer gradient and quiet bamboo at the edges. */
+body[data-theme="bamboo"] {
+    --sky-top:#2c8992; --sky-mid:#72b88c; --sky-bottom:#c7cc8e; --sky-glow:rgba(255,249,195,.86);
+    background-image:radial-gradient(ellipse at 75% 15%,rgba(255,249,195,.58),transparent 23%),linear-gradient(180deg,#2c8992 0%,#72b88c 56%,#c7cc8e 100%);
+}
+body[data-theme="dusk"] {
+    --sky-top:#202d57; --sky-mid:#76506c; --sky-bottom:#d18b60; --sky-glow:rgba(255,222,157,.9);
+    background-image:radial-gradient(ellipse at 74% 43%,rgba(255,222,157,.72),transparent 20%),linear-gradient(180deg,#202d57 0%,#76506c 44%,#d18b60 79%,#4c3b3d 100%);
+}
+.world::before {
+    background:
+        radial-gradient(ellipse at var(--glow-x) var(--glow-y),var(--sky-glow),transparent 25%),
+        repeating-linear-gradient(117deg,rgba(255,255,235,.025) 0 1px,transparent 1px 10px),
+        linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 55%,var(--sky-bottom) 100%);
+}
+body[data-theme="bamboo"] .world > .moon {
+    top:10vh; right:15vw; width:clamp(104px,12vw,174px); background:radial-gradient(circle at 34% 30%,#fffde1 0 18%,#f7efb1 55%,#d5dc91 100%); opacity:.94;
+    box-shadow:0 0 24px rgba(255,249,188,.95),0 0 95px rgba(255,239,167,.62),0 0 180px rgba(255,225,133,.24);
+}
+body[data-theme="dusk"] .world > .moon {
+    top:29vh; right:16vw; width:clamp(92px,10vw,148px); background:radial-gradient(circle at 35% 28%,#fff0bf 0 15%,#ffc677 48%,#e78b60 100%); opacity:.96;
+    box-shadow:0 0 28px rgba(255,211,143,.95),0 0 110px rgba(255,166,109,.52),0 0 190px rgba(207,103,104,.22);
+}
+body[data-theme="bamboo"] .world > .moon::before,
+body[data-theme="dusk"] .world > .moon::before {
+    content:""; position:absolute; inset:-64px; border-radius:50%; background:radial-gradient(circle,rgba(255,242,172,.28),transparent 62%); filter:blur(8px); z-index:-1;
+}
+body[data-theme="bamboo"] .world > .bamboo-grove,
+body[data-theme="dusk"] .world > .bamboo-grove { display:block!important; opacity:.36; filter:blur(.25px) drop-shadow(0 18px 26px rgba(0,23,13,.25)); }
+body[data-theme="bamboo"] .bamboo-right { opacity:.24; }
+body[data-theme="dusk"] .bamboo-grove { filter:hue-rotate(320deg) saturate(.72) blur(.4px); opacity:.24; }
+.bamboo-grove .stalk { border-color:rgba(174,213,126,.2); background:repeating-linear-gradient(180deg,rgba(143,190,113,.65) 0 5px,rgba(47,112,77,.72) 6px 11px,rgba(108,166,95,.65) 12px 15px); }
+
+/* Snow scene anchors: a soft cap at the top, piled ground at the bottom and a small distant snowman. */
+.snow-crown,.snow-ground,.snowman { display:none; pointer-events:none; }
+body[data-theme="snow"] .snow-crown,
+body[data-theme="snow"] .snow-ground,
+body[data-theme="snow"] .snowman { display:block; }
+.snow-crown { position:absolute; z-index:3; top:-3px; left:-3%; width:106%; height:76px; background:linear-gradient(180deg,rgba(246,252,243,.98),rgba(218,231,222,.92)); clip-path:polygon(0 0,100% 0,100% 53%,94% 49%,89% 65%,82% 52%,75% 70%,67% 48%,60% 62%,52% 45%,44% 67%,36% 51%,28% 72%,20% 49%,12% 63%,5% 48%,0 56%); filter:drop-shadow(0 7px 11px rgba(202,223,216,.35)); }
+.snow-crown::after { content:""; position:absolute; right:8%; bottom:17px; left:8%; height:15px; border-radius:50%; background:rgba(255,255,247,.55); filter:blur(9px); }
+.snow-ground { position:absolute; z-index:3; right:-7%; bottom:-8%; left:-7%; height:25%; background:radial-gradient(ellipse at 12% 47%,rgba(246,253,246,.98) 0 13%,transparent 14%),radial-gradient(ellipse at 48% 62%,rgba(239,249,240,.95) 0 23%,transparent 24%),radial-gradient(ellipse at 86% 38%,rgba(248,253,245,.98) 0 18%,transparent 19%),linear-gradient(180deg,transparent,rgba(221,236,228,.92)); filter:drop-shadow(0 -8px 16px rgba(219,237,229,.28)); }
+.snowman { position:absolute; z-index:4; left:7%; bottom:8%; width:94px; height:130px; opacity:.74; filter:drop-shadow(0 8px 10px rgba(67,88,87,.22)); }
+.snowman::before { content:""; position:absolute; left:14px; bottom:0; width:66px; height:66px; border-radius:50%; background:radial-gradient(circle at 35% 28%,#fff 0 14%,#e3efeb 78%); box-shadow:11px -45px 0 -9px #eef6f0; }
+.snowman::after { content:""; position:absolute; left:36px; top:64px; width:5px; height:5px; border-radius:50%; background:#465c5d; box-shadow:12px 0 0 #465c5d,6px 12px 0 -1px #d08b56; }
+.snowman-hat { position:absolute; z-index:2; top:34px; left:22px; width:48px; height:22px; background:#293c3e; clip-path:polygon(18% 0,82% 0,100% 100%,0 100%); }
+.snowman-hat::after { content:""; position:absolute; right:-9px; bottom:-4px; left:-9px; height:5px; border-radius:50%; background:#233537; }
+.snowman-scarf { position:absolute; z-index:3; top:66px; left:27px; width:48px; height:7px; background:#9a6e52; transform:rotate(-4deg); }
+.snowman-scarf::after { content:""; position:absolute; top:4px; right:2px; width:10px; height:25px; background:#9a6e52; transform:rotate(-8deg); }
+
+/* The frame follows the sky: brighter in the day and more recessed at night. */
+body[data-theme="bamboo"] .archive-board,body[data-theme="bamboo"] .page-frame { background:rgba(22,69,51,.47); border-color:rgba(224,239,190,.27); }
+body[data-theme="dusk"] .archive-board,body[data-theme="dusk"] .page-frame { background:rgba(58,36,48,.5); border-color:rgba(244,206,160,.2); }
+body[data-theme="night"] .archive-board,body[data-theme="night"] .page-frame { background:rgba(2,10,18,.82); border-color:rgba(153,194,179,.16); }
+body[data-theme="rain"] .archive-board,body[data-theme="rain"] .page-frame { background:rgba(7,27,32,.72); }
+body[data-theme="snow"] .archive-board,body[data-theme="snow"] .page-frame { background:rgba(25,48,51,.58); border-color:rgba(224,242,235,.25); }
+.archive-board,.page-frame {
+    position:relative; overflow:hidden; border-radius:4px;
+    --frame-line:rgba(194,221,167,.2); --frame-mark:#b9ca83;
+}
+.archive-board::before,.page-frame::before {
+    content:""; position:absolute; z-index:0; inset:10px; border:1px solid var(--frame-line); pointer-events:none;
+}
+.archive-board::after,.page-frame::after {
+    content:""; position:absolute; z-index:0; top:0; left:0; width:92px; height:2px; background:var(--frame-mark); pointer-events:none;
+}
+.archive-board > *,.page-frame > * { position:relative; z-index:1; }
+body[data-theme="bamboo"] .archive-board,body[data-theme="bamboo"] .page-frame { --frame-line:rgba(213,233,177,.26); --frame-mark:#d4bf76; background:linear-gradient(138deg,rgba(41,104,72,.68),rgba(14,53,40,.58)); }
+body[data-theme="dusk"] .archive-board,body[data-theme="dusk"] .page-frame { --frame-line:rgba(241,202,157,.2); --frame-mark:#e0a568; background:linear-gradient(138deg,rgba(88,48,57,.68),rgba(39,28,42,.62)); }
+body[data-theme="night"] .archive-board,body[data-theme="night"] .page-frame { --frame-line:rgba(159,201,190,.15); --frame-mark:#8eaa8e; background:linear-gradient(138deg,rgba(8,27,39,.82),rgba(2,11,19,.88)); }
+body[data-theme="rain"] .archive-board,body[data-theme="rain"] .page-frame { --frame-line:rgba(167,211,203,.17); --frame-mark:#9abeb0; }
+body[data-theme="snow"] .archive-board,body[data-theme="snow"] .page-frame { --frame-line:rgba(224,239,228,.25); --frame-mark:#d6e3c7; }
+.archive-mast,.page-mast { border-bottom-color:var(--frame-line); }
+.site-nav { border-bottom-color:var(--frame-line); }
+.site-nav a { border-radius:2px; }
+.site-nav a.active { border-color:var(--frame-line); background:rgba(208,224,166,.1); }
+.paper-card,.journal-card,.book-card,.gallery-tile,.mechanism-widget,.mechanism-list,.component-fold { border-radius:4px; }
+.paper-card::before { inset:8px; border-color:rgba(210,229,179,.1); }
+@media(max-width:760px) {
+    .snow-crown { height:52px; }
+    .snowman { left:4%; bottom:7%; transform:scale(.72); transform-origin:bottom left; }
+    .archive-board::before,.page-frame::before { inset:7px; }
+}
