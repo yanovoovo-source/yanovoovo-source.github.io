@@ -2,8 +2,21 @@ const themes=[{id:"bamboo",name:"月下竹林"},{id:"snow",name:"白雪亭楼"},
 const fortunes=["此事宜缓行。风来之前，先把剑擦亮。","山重水复不是坏事，至少说明地图还很大。","今日运势：适合御剑，忌与代码正面交锋。","答案不在远方，在你刚才差点忽略的那一念里。","且去做。若走错了，回来添一页札记便是。","剑已出鞘。剩下的事，交给下一步。"];
 const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodName=document.querySelector("#moodName"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
 let themeIndex=themes.findIndex(t=>t.id===localStorage.getItem("wulin-mood")); if(themeIndex<0)themeIndex=0;
-function applyTheme(){const t=themes[themeIndex];body.dataset.theme=t.id;moodName.textContent=t.name;localStorage.setItem("wulin-mood",t.id)} applyTheme();
-moodSwitch.addEventListener("click",()=>{themeIndex=(themeIndex+1)%themes.length;applyTheme()});
+let themeTimer;
+function applyTheme(animate=false){
+    const t=themes[themeIndex];
+    window.clearTimeout(themeTimer);
+    if(!animate){body.dataset.theme=t.id;moodName.textContent=t.name;localStorage.setItem("wulin-mood",t.id);return;}
+    body.classList.add("theme-changing");
+    themeTimer=window.setTimeout(()=>{
+        body.dataset.theme=t.id;
+        moodName.textContent=t.name;
+        localStorage.setItem("wulin-mood",t.id);
+        window.requestAnimationFrame(()=>body.classList.remove("theme-changing"));
+    },220);
+}
+applyTheme();
+moodSwitch.addEventListener("click",()=>{themeIndex=(themeIndex+1)%themes.length;applyTheme(true)});
 enterButton.addEventListener("click",()=>{jianghu.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>jianghu.focus({preventScroll:true}),650)});
 fortuneButton.addEventListener("click",()=>{const choices=fortunes.filter(f=>f!==fortuneText.textContent);fortuneText.textContent=choices[Math.floor(Math.random()*choices.length)]});
 backToTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));

@@ -36,15 +36,27 @@
     </button>
 
     <header class="hero">
-        <p class="hero-mark">私人数字居所 · 竹影山门</p>
-        <h1>无情道魁首</h1>
-        <p class="hero-subtitle">执一柄剑，行一程风，留几页自己的江湖。</p>
-        <div class="sword-line" aria-hidden="true"><span></span></div>
-        <button class="seal" id="enterButton" type="button" aria-label="进入我的江湖">
-            <span>入</span><small>江湖</small>
-        </button>
-        <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
-        <p class="scroll-hint">轻叩此印，往下是我的一方天地</p>
+        <div class="hero-copy">
+            <p class="hero-mark">私人数字居所 · 竹影山门</p>
+            <h1>无情道<br><em>魁首</em></h1>
+            <p class="hero-subtitle">执一柄剑，行一程风，留几页自己的江湖。</p>
+            <div class="sword-line" aria-hidden="true"><span></span></div>
+            <div class="hero-actions">
+                <button class="seal" id="enterButton" type="button" aria-label="进入我的江湖">
+                    <span>入</span><small>江湖</small>
+                </button>
+                <p class="scroll-hint">轻叩此印<br>往下是我的一方天地</p>
+            </div>
+            <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
+        </div>
+        <div class="hero-scene" aria-hidden="true">
+            <div class="scene-moon"></div>
+            <div class="scene-haze"></div>
+            <div class="scene-bamboo scene-bamboo-one"></div>
+            <div class="scene-bamboo scene-bamboo-two"></div>
+            <div class="scene-bamboo scene-bamboo-three"></div>
+            <p class="scene-caption"><span>01</span> 月下竹林</p>
+        </div>
     </header>
 
     <main id="jianghu" tabindex="-1">
@@ -52,6 +64,13 @@
             <p class="section-number">卷一 · 自序</p>
             <h2 id="intro-title">竹影札记</h2>
             <p class="lead">这里收留我路过人间时捡到的东西：好看的画面，突然想记下的句子，读过的书，今天新学会的事，以及一些会说话的小机关。</p>
+        </section>
+
+        <section class="stats-strip reveal" aria-label="江湖档案索引">
+            <div><strong>07</strong><span>已收札记</span></div>
+            <div><strong>12</strong><span>枕边藏书</span></div>
+            <div><strong>03</strong><span>在做机关</span></div>
+            <div><strong>2026</strong><span>开始筑站</span></div>
         </section>
 
         <section class="collection-grid" aria-label="个人收藏与记录">
@@ -73,6 +92,19 @@
                 <p class="card-kicker">今日习得</p><h3>把念头变成小东西</h3>
                 <ul><li><span>HTML</span> 给网页搭骨架</li><li><span>CSS</span> 为它披上颜色与月光</li><li><span>Git</span> 把每一步留在时间里</li></ul>
             </article>
+        </section>
+
+        <section class="trail-section reveal" aria-labelledby="trail-title">
+            <div class="trail-heading">
+                <p class="section-number">卷一 · 行迹</p>
+                <h2 id="trail-title">最近走过的路</h2>
+                <p>一些还没有被整理成作品的片段，先把它们留在这里。</p>
+            </div>
+            <ol class="trail-list">
+                <li><time>09.2026</time><div><strong>给山门换了一层青色</strong><span>重新整理主页的颜色、间距与入口。</span></div></li>
+                <li><time>08.2026</time><div><strong>学会让网页记住心境</strong><span>第一次做了可以切换的背景和一枚会回应的签。</span></div></li>
+                <li><time>07.2026</time><div><strong>从空白文件起步</strong><span>决定为自己留一处小小的互联网江湖。</span></div></li>
+            </ol>
         </section>
 
         <section class="mechanism reveal" aria-labelledby="mechanism-title">
