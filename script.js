@@ -1,17 +1,30 @@
-const themes=[{id:"bamboo",name:"清晨竹影"},{id:"dusk",name:"黄昏竹影"},{id:"night",name:"深夜竹影"},{id:"rain",name:"雨落竹林"},{id:"snow",name:"初雪山门"}];
+const themes=[
+    {id:"bamboo",name:"清晨竹影",icon:"☼",line:"风从竹梢落下，山门还没有醒透。"},
+    {id:"dusk",name:"黄昏竹影",icon:"◒",line:"天色慢下来，远山收起最后一笔。"},
+    {id:"night",name:"深夜竹影",icon:"☾",line:"灯影之外，只留一页未完的札记。"},
+    {id:"rain",name:"雨落竹林",icon:"╱",line:"雨声替我把多余的话，一行行删去。"},
+    {id:"snow",name:"初雪山门",icon:"✦",line:"雪落得很轻，像一封没有署名的信。"}
+];
 const fortunes=["此事宜缓行。风来之前，先把剑擦亮。","山重水复不是坏事，至少说明地图还很大。","今日运势：适合御剑，忌与代码正面交锋。","答案不在远方，在你刚才差点忽略的那一念里。","且去做。若走错了，回来添一页札记便是。","剑已出鞘。剩下的事，交给下一步。"];
-const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodName=document.querySelector("#moodName"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
+const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodIcon=document.querySelector("#moodIcon"),moodName=document.querySelector("#moodName"),sceneMood=document.querySelector("#sceneMood"),sceneLine=document.querySelector("#sceneLine"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
 let themeIndex=themes.findIndex(t=>t.id===localStorage.getItem("wulin-mood")); if(themeIndex<0)themeIndex=0;
 let themeTimer;
 function applyTheme(animate=false){
     const t=themes[themeIndex];
     window.clearTimeout(themeTimer);
-    if(!animate){body.dataset.theme=t.id;if(moodName)moodName.textContent=t.name;localStorage.setItem("wulin-mood",t.id);return;}
+    const syncTheme=()=>{
+        body.dataset.theme=t.id;
+        if(moodIcon)moodIcon.textContent=t.icon;
+        if(moodName)moodName.textContent=t.name;
+        if(sceneMood)sceneMood.textContent=t.name;
+        if(sceneLine)sceneLine.textContent=t.line;
+        if(moodSwitch)moodSwitch.setAttribute("aria-label",`切换心境与天气：当前为${t.name}`);
+        localStorage.setItem("wulin-mood",t.id);
+    };
+    if(!animate){syncTheme();return;}
     body.classList.add("theme-changing");
     themeTimer=window.setTimeout(()=>{
-        body.dataset.theme=t.id;
-        if(moodName)moodName.textContent=t.name;
-        localStorage.setItem("wulin-mood",t.id);
+        syncTheme();
         window.requestAnimationFrame(()=>body.classList.remove("theme-changing"));
     },220);
 }
