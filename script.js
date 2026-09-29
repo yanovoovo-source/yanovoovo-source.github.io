@@ -6,7 +6,23 @@ const themes=[
     {id:"snow",name:"初雪山门",icon:"✦",line:"雪落得很轻，像一封没有署名的信。"}
 ];
 const fortunes=["此事宜缓行。风来之前，先把剑擦亮。","山重水复不是坏事，至少说明地图还很大。","今日运势：适合御剑，忌与代码正面交锋。","答案不在远方，在你刚才差点忽略的那一念里。","且去做。若走错了，回来添一页札记便是。","剑已出鞘。剩下的事，交给下一步。"];
-const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodIcon=document.querySelector("#moodIcon"),moodName=document.querySelector("#moodName"),sceneMood=document.querySelector("#sceneMood"),sceneLine=document.querySelector("#sceneLine"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
+const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodIcon=document.querySelector("#moodIcon"),moodName=document.querySelector("#moodName"),sceneMood=document.querySelector("#sceneMood"),sceneLine=document.querySelector("#sceneLine"),particleField=document.querySelector("#moodParticles"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
+if(particleField){
+    const fragment=document.createDocumentFragment();
+    for(let i=0;i<38;i++){
+        const particle=document.createElement("span");
+        particle.style.setProperty("--x",`${Math.round(Math.random()*100)}%`);
+        particle.style.setProperty("--y",`${Math.round(Math.random()*100)}%`);
+        particle.style.setProperty("--size",`${(1.5+Math.random()*4).toFixed(1)}px`);
+        particle.style.setProperty("--length",`${Math.round(12+Math.random()*24)}px`);
+        particle.style.setProperty("--alpha",`${(.28+Math.random()*.5).toFixed(2)}`);
+        particle.style.setProperty("--delay",`${(-Math.random()*12).toFixed(2)}s`);
+        particle.style.setProperty("--duration",`${(7+Math.random()*11).toFixed(2)}s`);
+        particle.style.setProperty("--drift",`${Math.round(-42+Math.random()*84)}px`);
+        fragment.appendChild(particle);
+    }
+    particleField.appendChild(fragment);
+}
 let themeIndex=themes.findIndex(t=>t.id===localStorage.getItem("wulin-mood")); if(themeIndex<0)themeIndex=0;
 let themeTimer;
 function applyTheme(animate=false){
