@@ -1027,3 +1027,165 @@ body[data-theme="snow"] .archive-board,body[data-theme="snow"] .page-frame { --f
     .snowman { left:4%; bottom:7%; transform:scale(.72); transform-origin:bottom left; }
     .archive-board::before,.page-frame::before { inset:7px; }
 }
+
+/* Snow settles on the objects and frame edges, instead of becoming a flat white backdrop. */
+body[data-theme="snow"] .snow-crown,
+body[data-theme="snow"] .snow-ground { display:none!important; }
+body[data-theme="snow"] .snowman { opacity:.28; bottom:4%; }
+body[data-theme="snow"] .world > .bamboo-grove { display:block!important; opacity:.42; filter:grayscale(.12) brightness(1.06) drop-shadow(0 18px 26px rgba(36,58,57,.28)); }
+body[data-theme="snow"] .bamboo-right { opacity:.3; }
+body[data-theme="snow"] .bamboo-grove .stalk {
+    background:repeating-linear-gradient(180deg,rgba(126,166,127,.72) 0 5px,rgba(51,102,87,.78) 6px 11px,rgba(102,145,111,.7) 12px 15px);
+}
+body[data-theme="snow"] .bamboo-grove .stalk::after {
+    content:""; position:absolute; top:-4px; left:-46%; width:190%; height:12px;
+    border-radius:58% 42% 48% 52%; background:linear-gradient(180deg,#fbfff7 0%,#e2eee7 74%,rgba(198,218,211,.45) 100%);
+    transform:rotate(-3deg); filter:drop-shadow(0 3px 3px rgba(56,78,77,.18));
+}
+body[data-theme="snow"] .bamboo-grove .stalk i::after {
+    content:""; position:absolute; top:-4px; left:7%; width:78%; height:5px;
+    border-radius:90% 20% 90% 20%; background:linear-gradient(180deg,#ffffff,#dcebe5); filter:drop-shadow(0 2px 2px rgba(56,78,77,.18));
+}
+body[data-theme="snow"] .still-bamboo::before,
+body[data-theme="snow"] .still-bamboo::after {
+    background:linear-gradient(180deg,#f9fff7 0 32%,rgba(198,219,211,.8) 33% 100%);
+    box-shadow:0 -3px 0 rgba(255,255,250,.72);
+}
+body[data-theme="snow"] .hero-scene::after {
+    content:""; position:absolute; z-index:4; top:-1px; right:7%; left:7%; height:7px;
+    background:linear-gradient(180deg,#ffffff,#dcebe4); clip-path:polygon(0 0,100% 0,98% 72%,89% 54%,80% 86%,70% 58%,58% 78%,48% 50%,38% 82%,25% 58%,15% 80%,5% 54%);
+    filter:drop-shadow(0 4px 4px rgba(53,77,75,.2));
+}
+body[data-theme="snow"] .archive-board::after,
+body[data-theme="snow"] .page-frame::after {
+    top:0; width:100%; height:6px; background:linear-gradient(180deg,#ffffff,#dcebe4);
+    clip-path:polygon(0 0,100% 0,100% 70%,91% 50%,83% 82%,72% 55%,63% 76%,50% 48%,40% 80%,28% 54%,18% 78%,8% 50%,0 70%);
+}
+body[data-theme="snow"] .paper-card::after,
+body[data-theme="snow"] .journal-card::after,
+body[data-theme="snow"] .book-card::after,
+body[data-theme="snow"] .mechanism-widget::after,
+body[data-theme="snow"] .mechanism-list::after {
+    left:10px; width:calc(100% - 20px); height:4px; background:linear-gradient(180deg,#ffffff,#dcebe4);
+    clip-path:polygon(0 0,100% 0,98% 75%,87% 50%,76% 82%,65% 50%,53% 75%,40% 45%,28% 80%,16% 52%,4% 78%);
+}
+
+/* Photo-backed bamboo distance. The side masks let the grove overlap the page corners slightly. */
+body[data-theme="bamboo"] .world::before {
+    background-image:linear-gradient(180deg,rgba(20,83,82,.2),rgba(27,99,67,.38)),url("https://images.unsplash.com/photo-1746543335497-e0f9265ef90a?auto=format&fit=crop&w=2400&q=82");
+    background-size:cover; background-position:center 42%;
+}
+body[data-theme="dusk"] .world::before {
+    background-image:linear-gradient(180deg,rgba(31,37,80,.48),rgba(106,57,61,.38) 54%,rgba(209,122,76,.44)),url("https://images.unsplash.com/photo-1746543335497-e0f9265ef90a?auto=format&fit=crop&w=2400&q=82");
+    background-size:cover; background-position:center 42%;
+}
+body[data-theme="rain"] .world::before {
+    background-image:linear-gradient(180deg,rgba(8,28,39,.6),rgba(19,62,63,.52)),url("https://images.unsplash.com/photo-1746543335497-e0f9265ef90a?auto=format&fit=crop&w=2400&q=82");
+    background-size:cover; background-position:center 42%;
+}
+.bamboo-edge {
+    position:fixed; z-index:2; top:0; bottom:0; width:min(24vw,330px); pointer-events:none;
+    opacity:0; background-image:linear-gradient(90deg,rgba(3,27,20,.7),rgba(26,81,49,.18)),url("https://images.unsplash.com/photo-1746543335497-e0f9265ef90a?auto=format&fit=crop&w=1600&q=78");
+    background-size:cover; background-position:center; filter:saturate(1.15) contrast(1.08);
+}
+.bamboo-edge-left { left:-2%; -webkit-mask-image:linear-gradient(90deg,#000 0 64%,transparent 100%); mask-image:linear-gradient(90deg,#000 0 64%,transparent 100%); }
+.bamboo-edge-right { right:-2%; transform:scaleX(-1); -webkit-mask-image:linear-gradient(90deg,#000 0 64%,transparent 100%); mask-image:linear-gradient(90deg,#000 0 64%,transparent 100%); }
+body[data-theme="bamboo"] .bamboo-edge { opacity:.58; }
+body[data-theme="dusk"] .bamboo-edge { opacity:.38; filter:saturate(.72) hue-rotate(326deg) contrast(1.05); }
+body[data-theme="rain"] .bamboo-edge { opacity:.26; filter:saturate(.65) brightness(.66); }
+body[data-theme="snow"] .bamboo-edge { opacity:.22; filter:saturate(.48) brightness(1.12); }
+body[data-theme="night"] .bamboo-edge { opacity:.08; filter:saturate(.45) brightness(.35); }
+
+/* Snow has volume on the mast and cards: a bright top plane, a cool underside and a cast shadow. */
+body[data-theme="snow"] .archive-mast::before,
+body[data-theme="snow"] .page-mast::before {
+    content:""; position:absolute; z-index:2; top:-2px; right:-5px; left:-5px; height:10px;
+    background:linear-gradient(180deg,#ffffff 0%,#f4fbf6 42%,#c9ddd6 74%,#9fbcb5 100%);
+    clip-path:polygon(0 0,100% 0,100% 70%,92% 54%,84% 91%,73% 58%,64% 82%,52% 48%,41% 86%,29% 56%,19% 78%,8% 50%,0 70%);
+    filter:drop-shadow(0 6px 6px rgba(41,65,65,.28)); pointer-events:none;
+}
+body[data-theme="snow"] .archive-board::after,
+body[data-theme="snow"] .page-frame::after { box-shadow:0 5px 9px rgba(48,71,70,.28),inset 0 -2px rgba(160,190,184,.7); }
+body[data-theme="snow"] .paper-card::after,
+body[data-theme="snow"] .journal-card::after,
+body[data-theme="snow"] .book-card::after,
+body[data-theme="snow"] .mechanism-widget::after,
+body[data-theme="snow"] .mechanism-list::after {
+    box-shadow:0 4px 8px rgba(50,75,73,.24),inset 0 -1px rgba(160,190,184,.7);
+}
+
+/* Interior surfaces follow the same mood as the outer frame. */
+body[data-theme="bamboo"] .paper-card,
+body[data-theme="bamboo"] .journal-card,
+body[data-theme="bamboo"] .book-card,
+body[data-theme="bamboo"] .gallery-tile,
+body[data-theme="bamboo"] .mechanism-widget,
+body[data-theme="bamboo"] .mechanism-list,
+body[data-theme="bamboo"] .component-fold,
+body[data-theme="bamboo"] .shelf-note article { background:linear-gradient(145deg,rgba(226,240,211,.86),rgba(182,214,183,.74)); border-color:rgba(222,239,205,.72); }
+body[data-theme="bamboo"] .paper-card h3,
+body[data-theme="bamboo"] .journal-card h3,
+body[data-theme="bamboo"] .book-card h3,
+body[data-theme="bamboo"] .mechanism-widget h3,
+body[data-theme="bamboo"] .mechanism-list h3,
+body[data-theme="bamboo"] .shelf-note h3 { color:#214c3c; }
+body[data-theme="bamboo"] .paper-card p:not(.card-kicker),
+body[data-theme="bamboo"] .journal-card p,
+body[data-theme="bamboo"] .book-card p,
+body[data-theme="bamboo"] .mechanism-list li,
+body[data-theme="bamboo"] .shelf-note p { color:#526f5e; }
+body[data-theme="bamboo"] .paper-card .card-kicker,
+body[data-theme="bamboo"] .journal-card time,
+body[data-theme="bamboo"] .book-meta,
+body[data-theme="bamboo"] .card-status { color:#527646; }
+body[data-theme="dusk"] .paper-card,
+body[data-theme="dusk"] .journal-card,
+body[data-theme="dusk"] .book-card,
+body[data-theme="dusk"] .gallery-tile,
+body[data-theme="dusk"] .mechanism-widget,
+body[data-theme="dusk"] .mechanism-list,
+body[data-theme="dusk"] .component-fold,
+body[data-theme="dusk"] .shelf-note article { background:linear-gradient(145deg,rgba(99,59,66,.82),rgba(48,32,42,.8)); border-color:rgba(225,174,137,.25); }
+body[data-theme="dusk"] .paper-card h3,
+body[data-theme="dusk"] .journal-card h3,
+body[data-theme="dusk"] .book-card h3,
+body[data-theme="dusk"] .mechanism-widget h3,
+body[data-theme="dusk"] .mechanism-list h3,
+body[data-theme="dusk"] .shelf-note h3 { color:#f0d8c2; }
+body[data-theme="dusk"] .paper-card p:not(.card-kicker),
+body[data-theme="dusk"] .journal-card p,
+body[data-theme="dusk"] .book-card p,
+body[data-theme="dusk"] .mechanism-list li,
+body[data-theme="dusk"] .shelf-note p { color:#d3b5a8; }
+body[data-theme="dusk"] .paper-card .card-kicker,
+body[data-theme="dusk"] .journal-card time,
+body[data-theme="dusk"] .book-meta,
+body[data-theme="dusk"] .card-status { color:#e2b17c; }
+body[data-theme="snow"] .paper-card,
+body[data-theme="snow"] .journal-card,
+body[data-theme="snow"] .book-card,
+body[data-theme="snow"] .gallery-tile,
+body[data-theme="snow"] .mechanism-widget,
+body[data-theme="snow"] .mechanism-list,
+body[data-theme="snow"] .component-fold,
+body[data-theme="snow"] .shelf-note article { background:linear-gradient(145deg,rgba(220,236,231,.84),rgba(161,190,190,.68)); border-color:rgba(232,247,238,.62); }
+body[data-theme="snow"] .paper-card h3,
+body[data-theme="snow"] .journal-card h3,
+body[data-theme="snow"] .book-card h3,
+body[data-theme="snow"] .mechanism-widget h3,
+body[data-theme="snow"] .mechanism-list h3,
+body[data-theme="snow"] .shelf-note h3 { color:#294e52; }
+body[data-theme="snow"] .paper-card p:not(.card-kicker),
+body[data-theme="snow"] .journal-card p,
+body[data-theme="snow"] .book-card p,
+body[data-theme="snow"] .mechanism-list li,
+body[data-theme="snow"] .shelf-note p { color:#526e70; }
+body[data-theme="snow"] .paper-card .card-kicker,
+body[data-theme="snow"] .journal-card time,
+body[data-theme="snow"] .book-meta,
+body[data-theme="snow"] .card-status { color:#477072; }
+@media(max-width:760px) {
+    .bamboo-edge { width:32vw; opacity:.22!important; }
+    body[data-theme="bamboo"] .bamboo-edge { opacity:.3!important; }
+    body[data-theme="snow"] .bamboo-edge { opacity:.16!important; }
+}
