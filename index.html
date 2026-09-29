@@ -1,15 +1,92 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>无情道魁首</title>
-        <link rel="stylesheet" href="style.css">
-    </head> 
-    <body>
-        <main>
-            <h1>无情道魁首</h1>
-            <p>当年扫射江湖病的时候，我御剑飞行躲过一劫</p>
-        </main>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="无情道魁首的私人数字居所：收录图片、文字、读书札记、今日所学和会说话的小机关。">
+    <meta name="theme-color" content="#123f30">
+    <title>无情道魁首</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body data-theme="bamboo">
+    <div class="world" aria-hidden="true">
+        <div class="moon"></div><div class="stars"></div>
+        <div class="bamboo-grove bamboo-left">
+            <span class="stalk" style="--x:4%;--h:72%;--r:-5deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:25%;--h:87%;--r:2deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:47%;--h:65%;--r:-2deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:70%;--h:92%;--r:4deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:89%;--h:77%;--r:-6deg"><i></i><i></i><i></i></span>
+        </div>
+        <div class="bamboo-grove bamboo-right">
+            <span class="stalk" style="--x:2%;--h:84%;--r:5deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:23%;--h:67%;--r:-3deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:46%;--h:94%;--r:2deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:69%;--h:73%;--r:-5deg"><i></i><i></i><i></i></span>
+            <span class="stalk" style="--x:90%;--h:88%;--r:4deg"><i></i><i></i><i></i></span>
+        </div>
+        <div class="mountains back"></div><div class="mountains front"></div>
+        <div class="mist mist-one"></div><div class="mist mist-two"></div>
+        <div class="petals"></div>
+    </div>
+
+    <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换心境背景">
+        <span aria-hidden="true">☾</span><span id="moodName">月下竹林</span>
+    </button>
+
+    <header class="hero">
+        <p class="hero-mark">私人数字居所 · 竹影山门</p>
+        <h1>无情道魁首</h1>
+        <p class="hero-subtitle">执一柄剑，行一程风，留几页自己的江湖。</p>
+        <div class="sword-line" aria-hidden="true"><span></span></div>
+        <button class="seal" id="enterButton" type="button" aria-label="进入我的江湖">
+            <span>入</span><small>江湖</small>
+        </button>
+        <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
+        <p class="scroll-hint">轻叩此印，往下是我的一方天地</p>
+    </header>
+
+    <main id="jianghu" tabindex="-1">
+        <section class="intro reveal" aria-labelledby="intro-title">
+            <p class="section-number">卷一 · 自序</p>
+            <h2 id="intro-title">竹影札记</h2>
+            <p class="lead">这里收留我路过人间时捡到的东西：好看的画面，突然想记下的句子，读过的书，今天新学会的事，以及一些会说话的小机关。</p>
+        </section>
+
+        <section class="collection-grid" aria-label="个人收藏与记录">
+            <article class="paper-card reveal">
+                <p class="card-kicker">近日手记</p><h3>刚刚学会的事</h3>
+                <p>从一个空白文件开始，亲手搭起自己的网页。原来所谓江湖，也可以由一行一行的字筑成。</p>
+                <time id="todayLabel" datetime="2026-08-26">二〇二六年八月</time>
+            </article>
+            <article class="paper-card reveal">
+                <p class="card-kicker">藏书阁</p><h3>枕边有书</h3>
+                <p>正在读的、读完舍不得合上的、只记住一句话的，都等我慢慢收进来。</p>
+                <span class="card-status">待续 · 不定期添卷</span>
+            </article>
+            <article class="paper-card image-card reveal">
+                <div class="image-window" aria-label="等待收录的图片位置"><span class="sun"></span><span class="ridge"></span></div>
+                <div><p class="card-kicker">浮光掠影</p><h3>今日所见</h3><p>先留一扇窗。以后可以放画、照片，或任何让我停下来多看一眼的东西。</p></div>
+            </article>
+            <article class="paper-card learn-card reveal">
+                <p class="card-kicker">今日习得</p><h3>把念头变成小东西</h3>
+                <ul><li><span>HTML</span> 给网页搭骨架</li><li><span>CSS</span> 为它披上颜色与月光</li><li><span>Git</span> 把每一步留在时间里</li></ul>
+            </article>
+        </section>
+
+        <section class="mechanism reveal" aria-labelledby="mechanism-title">
+            <div><p class="section-number">卷二 · 机关匣</p><h2 id="mechanism-title">问剑签</h2><p class="mechanism-note">这是第一个会回应的小组件。心里默念一件事，再敲一下铜扣。</p></div>
+            <div class="fortune-box"><p id="fortuneText" aria-live="polite">剑尚在匣中，答案藏在雾里。</p><button id="fortuneButton" type="button">叩问一次</button></div>
+        </section>
+
+        <section class="future reveal" aria-labelledby="future-title">
+            <p class="section-number">未完待续</p><h2 id="future-title">此间仍在生长</h2>
+            <p>下一次回来，也许添一页书单，也许挂一幅新画，也许再做一个能陪我聊天的 AI 小机关。</p>
+            <div class="future-links"><span>浮光</span><i>·</i><span>札记</span><i>·</i><span>藏书</span><i>·</i><span>机关</span></div>
+        </section>
+    </main>
+
+    <footer><p>无情道魁首 · 自筑于互联网江湖</p><button id="backToTop" type="button">归山门 ↑</button></footer>
+</body>
 </html>
