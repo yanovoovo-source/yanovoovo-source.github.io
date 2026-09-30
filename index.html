@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="无情道魁首的私人数字居所：收录图片、文字、读书札记、今日所学和会说话的小机关。">
-    <meta name="theme-color" content="#123f30">
+    <meta name="theme-color" content="#171416">
     <title>无情道魁首</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
@@ -35,9 +35,13 @@
     <div class="snowman" aria-hidden="true"><span class="snowman-hat"></span><span class="snowman-scarf"></span></div>
     <div class="bamboo-edge bamboo-edge-left" aria-hidden="true"></div><div class="bamboo-edge bamboo-edge-right" aria-hidden="true"></div>
 
-    <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换心境与天气：当前为清晨竹影">
-        <span id="moodIcon" aria-hidden="true">☼</span><span id="moodName">清晨竹影</span>
+    <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换背景：当前为花灯水巷">
+        <span id="moodIcon" aria-hidden="true">✦</span><span id="moodName">花灯水巷</span>
     </button>
+    <button class="weather-switch" id="weatherSwitch" type="button" aria-label="切换天气：当前花落无声">
+        <span id="weatherIcon" aria-hidden="true">❀</span><span id="weatherName">花落无声</span>
+    </button>
+    <img class="signature-mark" src="assets/jianghu-emblem.png" alt="个人签名印章">
 
     <header class="hero">
         <div class="hero-copy">
@@ -46,8 +50,8 @@
             <p class="hero-subtitle">执一柄剑，行一程风，留几页自己的江湖。</p>
             <div class="sword-line" aria-hidden="true"><span></span></div>
             <div class="hero-actions">
-                <button class="seal seal-image" id="enterButton" type="button" aria-label="进入我的江湖">
-                    <img src="assets/jianghu-emblem.png" alt="" aria-hidden="true">
+                <button class="seal entry-seal" id="enterButton" type="button" aria-label="进入我的江湖">
+                    <span>入</span><small>江湖</small>
                 </button>
                 <p class="scroll-hint">轻叩此印<br>往下是我的一方天地</p>
             </div>

@@ -1,12 +1,15 @@
-const themes=[
-    {id:"bamboo",name:"清晨竹影",icon:"☼",line:"风从竹梢落下，山门还没有醒透。"},
-    {id:"dusk",name:"黄昏竹影",icon:"◒",line:"天色慢下来，远山收起最后一笔。"},
-    {id:"night",name:"深夜竹影",icon:"☾",line:"灯影之外，只留一页未完的札记。"},
-    {id:"rain",name:"雨落竹林",icon:"╱",line:"雨声替我把多余的话，一行行删去。"},
-    {id:"snow",name:"初雪山门",icon:"✦",line:"雪落得很轻，像一封没有署名的信。"}
+const scenes=[
+    {id:"scene-01",name:"花灯水巷",icon:"✦",line:"楼影沉在水里，花枝从檐角探出来。"},
+    {id:"scene-02",name:"朱门长街",icon:"❖",line:"长街灯火未歇，江湖还在檐下往来。"},
+    {id:"scene-03",name:"塔影旧城",icon:"✧",line:"塔影压着旧城，风把远处的花吹来。"}
+];
+const weathers=[
+    {id:"clear",name:"花落无声",icon:"❀",line:"花瓣和金屑偶尔掠过屏面。"},
+    {id:"rain",name:"檐下听雨",icon:"╱",line:"雨线忽密忽疏，顺着屋檐落下。"},
+    {id:"snow",name:"灯下初雪",icon:"❄",line:"雪片有远有近，慢慢落在檐与纸面。"}
 ];
 const fortunes=["此事宜缓行。风来之前，先把剑擦亮。","山重水复不是坏事，至少说明地图还很大。","今日运势：适合御剑，忌与代码正面交锋。","答案不在远方，在你刚才差点忽略的那一念里。","且去做。若走错了，回来添一页札记便是。","剑已出鞘。剩下的事，交给下一步。"];
-const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodIcon=document.querySelector("#moodIcon"),moodName=document.querySelector("#moodName"),sceneMood=document.querySelector("#sceneMood"),sceneLine=document.querySelector("#sceneLine"),particleField=document.querySelector("#moodParticles"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
+const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodIcon=document.querySelector("#moodIcon"),moodName=document.querySelector("#moodName"),weatherSwitch=document.querySelector("#weatherSwitch"),weatherIcon=document.querySelector("#weatherIcon"),weatherName=document.querySelector("#weatherName"),sceneMood=document.querySelector("#sceneMood"),sceneLine=document.querySelector("#sceneLine"),particleField=document.querySelector("#moodParticles"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
 if(particleField){
     const fragment=document.createDocumentFragment();
     const particleCount=window.matchMedia("(max-width:760px)").matches?112:216;
@@ -30,29 +33,37 @@ if(particleField){
     }
     particleField.appendChild(fragment);
 }
-let themeIndex=themes.findIndex(t=>t.id===localStorage.getItem("wulin-mood")); if(themeIndex<0)themeIndex=0;
+let sceneIndex=scenes.findIndex(s=>s.id===localStorage.getItem("wulin-scene")); if(sceneIndex<0)sceneIndex=0;
+let weatherIndex=weathers.findIndex(w=>w.id===localStorage.getItem("wulin-weather")); if(weatherIndex<0)weatherIndex=0;
 let themeTimer;
-function applyTheme(animate=false){
-    const t=themes[themeIndex];
+function applyScene(animate=false){
+    const scene=scenes[sceneIndex],weather=weathers[weatherIndex];
     window.clearTimeout(themeTimer);
-    const syncTheme=()=>{
-        body.dataset.theme=t.id;
-        if(moodIcon)moodIcon.textContent=t.icon;
-        if(moodName)moodName.textContent=t.name;
-        if(sceneMood)sceneMood.textContent=t.name;
-        if(sceneLine)sceneLine.textContent=t.line;
-        if(moodSwitch)moodSwitch.setAttribute("aria-label",`切换心境与天气：当前为${t.name}`);
-        localStorage.setItem("wulin-mood",t.id);
+    const sync=()=>{
+        body.dataset.theme=scene.id;
+        body.dataset.scene=scene.id;
+        body.dataset.weather=weather.id;
+        if(moodIcon)moodIcon.textContent=scene.icon;
+        if(moodName)moodName.textContent=scene.name;
+        if(weatherIcon)weatherIcon.textContent=weather.icon;
+        if(weatherName)weatherName.textContent=weather.name;
+        if(sceneMood)sceneMood.textContent=scene.name;
+        if(sceneLine)sceneLine.textContent=`${scene.line} ${weather.line}`;
+        if(moodSwitch)moodSwitch.setAttribute("aria-label",`切换背景：当前为${scene.name}`);
+        if(weatherSwitch)weatherSwitch.setAttribute("aria-label",`切换天气：当前为${weather.name}`);
+        localStorage.setItem("wulin-scene",scene.id);
+        localStorage.setItem("wulin-weather",weather.id);
     };
-    if(!animate){syncTheme();return;}
+    if(!animate){sync();return;}
     body.classList.add("theme-changing");
     themeTimer=window.setTimeout(()=>{
-        syncTheme();
+        sync();
         window.requestAnimationFrame(()=>body.classList.remove("theme-changing"));
-    },220);
+    },260);
 }
-applyTheme();
-if(moodSwitch)moodSwitch.addEventListener("click",()=>{themeIndex=(themeIndex+1)%themes.length;applyTheme(true)});
+applyScene();
+if(moodSwitch)moodSwitch.addEventListener("click",()=>{sceneIndex=(sceneIndex+1)%scenes.length;applyScene(true)});
+if(weatherSwitch)weatherSwitch.addEventListener("click",()=>{weatherIndex=(weatherIndex+1)%weathers.length;applyScene(true)});
 if(enterButton&&jianghu)enterButton.addEventListener("click",()=>{jianghu.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>jianghu.focus({preventScroll:true}),650)});
 if(fortuneButton&&fortuneText)fortuneButton.addEventListener("click",()=>{const choices=fortunes.filter(f=>f!==fortuneText.textContent);fortuneText.textContent=choices[Math.floor(Math.random()*choices.length)]});
 if(backToTop)backToTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));

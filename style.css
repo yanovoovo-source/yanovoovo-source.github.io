@@ -1260,6 +1260,166 @@ body[data-theme="snow"] .seal.seal-image img { filter:drop-shadow(0 14px 18px rg
     .seal.seal-image { width:92px; height:92px; }
 }
 
+/* Three user-provided night paintings are the only scene backgrounds. */
+html,body { min-height:100%; background:#171416; }
+body {
+    position:relative; isolation:isolate; color:#e9ded8;
+    --ink:#e9ded8; --muted:#b7aaa5; --paper:rgba(25,21,24,.78);
+    --line:rgba(224,181,156,.24); --accent:#c94d3d; --accent-dark:#8b2f29;
+    --gold:#e0b15c; --glow:rgba(227,173,113,.28);
+}
+body::before {
+    content:""; position:fixed; z-index:-3; inset:0; pointer-events:none;
+    background-image:linear-gradient(180deg,rgba(8,7,10,.22),rgba(10,8,12,.58)),url("assets/jianghu-scene-01.jpg");
+    background-size:cover; background-position:center; background-repeat:no-repeat;
+    transform:scale(1.015); filter:saturate(.9) contrast(1.06); transition:opacity .75s ease,background-image .75s ease;
+}
+body[data-scene="scene-02"]::before { background-image:linear-gradient(180deg,rgba(8,7,10,.24),rgba(11,8,12,.6)),url("assets/jianghu-scene-02.jpg"); }
+body[data-scene="scene-03"]::before { background-image:linear-gradient(180deg,rgba(8,7,10,.2),rgba(12,9,11,.58)),url("assets/jianghu-scene-03.jpg"); }
+body::after {
+    content:""; position:fixed; z-index:-2; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse at 55% 35%,transparent 0 26%,rgba(8,6,9,.18) 68%,rgba(6,5,8,.58) 100%),linear-gradient(180deg,rgba(9,7,11,.12),rgba(8,6,9,.28));
+}
+.world { z-index:-1; opacity:0!important; visibility:hidden; }
+.bamboo-edge { display:none!important; }
+
+/* Warm ink, vermilion and old-gold surfaces replace the previous green UI. */
+.mood-switch,.weather-switch {
+    position:fixed; z-index:10; right:28px; display:flex; gap:9px; align-items:center;
+    min-width:128px; padding:9px 13px; color:#f2e6df; background:rgba(15,12,16,.68);
+    border:1px solid rgba(221,177,148,.36); border-radius:3px; backdrop-filter:blur(14px);
+    box-shadow:0 8px 28px rgba(0,0,0,.24); cursor:pointer; letter-spacing:.04em;
+}
+.mood-switch { top:24px; }
+.weather-switch { top:70px; color:#dfc8bd; }
+.mood-switch:hover,.weather-switch:hover { background:rgba(76,27,28,.8); border-color:rgba(231,184,131,.64); transform:translateY(-2px); }
+.mood-switch span:first-child,.weather-switch span:first-child { color:#e2b165; }
+.signature-mark {
+    position:fixed; z-index:5; right:clamp(14px,3vw,42px); bottom:clamp(15px,3vw,34px);
+    width:clamp(96px,10vw,156px); height:auto; pointer-events:none; opacity:.82;
+    filter:drop-shadow(0 7px 10px rgba(0,0,0,.45)) saturate(.9) contrast(1.04);
+}
+
+.hero {
+    width:min(1140px,calc(100% - 64px)); min-height:520px; margin:42px auto 58px;
+    background:linear-gradient(132deg,rgba(13,11,15,.88),rgba(25,17,21,.64) 60%,rgba(52,22,24,.48));
+    border-color:rgba(223,177,146,.24); box-shadow:0 28px 90px rgba(0,0,0,.42),inset 0 1px rgba(255,231,207,.08);
+}
+.hero-mark { color:#d8a45d; }
+.hero h1 { color:#f3e7df; font-size:clamp(2.3rem,4.6vw,4.6rem)!important; letter-spacing:.08em; text-shadow:0 3px 26px rgba(0,0,0,.72); }
+.hero h1 em { color:#d97d66; font-size:.76em; }
+.hero-subtitle { color:#d2c0b8; }
+.hero-quote { color:#e8d9d1; }
+.sword-line::before,.sword-line::after { background:linear-gradient(90deg,transparent,rgba(229,183,121,.82)); }
+.sword-line::after { background:linear-gradient(90deg,rgba(229,183,121,.82),transparent); }
+.sword-line span { border-color:rgba(229,183,121,.88); }
+.entry-seal {
+    width:74px!important; height:74px!important; display:grid; place-content:center; gap:3px;
+    color:#f6e9de; background:linear-gradient(145deg,#a83c32,#642322)!important;
+    border:1px solid rgba(241,192,143,.76)!important; outline:1px solid rgba(172,68,53,.7)!important;
+    box-shadow:0 12px 30px rgba(20,5,8,.46),inset 0 0 0 2px rgba(255,220,171,.1)!important;
+    transform:rotate(-2deg)!important;
+}
+.entry-seal span { font-size:1.46rem!important; color:#f7e7d9; }
+.entry-seal small { color:#e7b979; font-size:.62rem!important; letter-spacing:.22em; }
+.entry-seal:hover { background:linear-gradient(145deg,#c14b3d,#7e2928)!important; transform:rotate(1deg) translateY(-3px)!important; }
+
+.archive-board,.page-frame {
+    background:linear-gradient(145deg,rgba(17,13,17,.86),rgba(29,17,21,.7))!important;
+    border-color:rgba(220,172,142,.25)!important; box-shadow:0 28px 80px rgba(0,0,0,.4),inset 0 1px rgba(255,229,207,.07);
+}
+.archive-mast,.page-mast { border-bottom-color:rgba(222,177,145,.24)!important; }
+.archive-mast-copy strong,.page-mast-copy h1,.intro h2,.trail-heading h2,.mechanism h2,.future h2 { color:#f1e0d8!important; }
+.archive-mast-copy span,.page-index,.lead,.trail-heading>p:last-child,.mechanism-note,.future>p:not(.section-number) { color:#bca9a1!important; }
+.section-number,.card-kicker,.archive-code,.page-index { color:#d2a15f!important; }
+.site-nav { border-bottom-color:rgba(222,177,145,.22); }
+.site-nav a { color:#c8b2aa; }
+.site-nav a.active { color:#f0d9cf; border-color:rgba(224,176,139,.45); background:rgba(170,55,46,.18); }
+.paper-card,.journal-card,.book-card,.gallery-tile,.mechanism-widget,.mechanism-list,.component-fold,.shelf-note article {
+    background:linear-gradient(145deg,rgba(28,19,23,.84),rgba(15,13,17,.72))!important;
+    border-color:rgba(220,172,142,.22)!important; box-shadow:0 12px 30px rgba(0,0,0,.2);
+}
+.paper-card h3,.journal-card h3,.book-card h3,.mechanism-widget h3,.mechanism-list h3,.component-fold summary strong,.shelf-note h3 { color:#eddbd3!important; }
+.paper-card p:not(.card-kicker),.journal-card p,.book-card p,.mechanism-list li,.component-fold .fold-body,.shelf-note p { color:#baa8a1!important; }
+.paper-card time,.card-status,.journal-card time,.book-meta,.learn-card li span { color:#d19c5d!important; }
+.paper-card::before,.paper-card::after,.journal-card::after,.book-card::after,.mechanism-widget::after,.mechanism-list::after { border-color:rgba(223,176,143,.13); }
+.fortune-box { border-color:rgba(220,172,142,.28); background:rgba(56,24,27,.34); }
+.fortune-box p { color:#e0c3b7; }
+.fortune-box button,#backToTop { color:#e2b06d; border-color:rgba(224,176,112,.5); }
+footer { color:#b39f99; border-top-color:rgba(222,177,145,.2); }
+.scene-caption { color:#c7aaa0!important; }
+.scene-caption span { color:#e0ad63!important; }
+.stats-strip { border-bottom-color:rgba(222,177,145,.22)!important; }
+.stats-strip div { border-right-color:rgba(222,177,145,.18)!important; }
+.stats-strip strong { color:#edddd5!important; }
+.stats-strip span { color:#b89e96!important; }
+.trail-list li { border-bottom-color:rgba(222,177,145,.17)!important; }
+.trail-list time { color:#d19c5d!important; }
+.trail-list strong { color:#ead8d1!important; }
+.trail-list span { color:#b39f98!important; }
+.component-fold summary .fold-num { color:#db9a5a!important; }
+.component-fold summary small { color:#bfa59b!important; }
+.tag-list li { border-color:rgba(224,176,140,.27)!important; color:#d1a988!important; }
+.book-card .book-spine { border-color:rgba(224,176,140,.42)!important; color:#e0b06a!important; background:rgba(165,58,46,.18)!important; }
+.gallery-note { border-color:rgba(224,176,140,.28)!important; color:#bca8a0!important; }
+
+/* The particle layer is a real viewport layer; weather is independent of the three paintings. */
+.mood-particles-overlay { z-index:2; inset:0; opacity:.58; mix-blend-mode:screen; }
+body[data-weather="clear"] .mood-particles-overlay { opacity:.6; }
+body[data-weather="clear"] .mood-particles span { background:rgba(245,205,138,.78); box-shadow:0 0 10px rgba(242,182,117,.58); animation-name:petal-float; }
+body[data-weather="rain"] .mood-particles-overlay { opacity:.92; animation:weather-surge 7s ease-in-out infinite; }
+body[data-weather="rain"] .mood-particles span {
+    width:var(--thickness); height:var(--length); border-radius:1px;
+    background:linear-gradient(112deg,transparent 0 30%,rgba(198,220,220,.1) 35%,rgba(226,240,236,.88) 53%,rgba(137,180,184,.18) 70%,transparent 100%);
+    box-shadow:0 0 5px rgba(196,222,220,.22); animation-name:rain-real; animation-timing-function:linear;
+}
+body[data-weather="snow"] .mood-particles-overlay { opacity:.8; animation:weather-surge-snow 12s ease-in-out infinite; }
+body[data-weather="snow"] .mood-particles span {
+    width:max(3px,var(--size)); height:max(3px,var(--size)); min-width:3px; min-height:3px;
+    border-radius:var(--radius); background:radial-gradient(circle at 34% 28%,#fff 0 20%,rgba(246,249,246,.9) 48%,rgba(197,215,217,.38) 100%);
+    box-shadow:0 0 12px rgba(246,251,250,.62); animation-name:snow-real; animation-timing-function:ease-in-out;
+}
+body.theme-changing .mood-particles-overlay { opacity:0!important; animation:none; }
+@keyframes weather-surge { 0%,100%{opacity:.34} 36%{opacity:.68} 55%{opacity:1} 76%{opacity:.46} }
+@keyframes weather-surge-snow { 0%,100%{opacity:.28} 34%{opacity:.56} 60%{opacity:.94} 80%{opacity:.48} }
+@keyframes rain-real { from{transform:translate3d(0,-60px,0) rotate(var(--angle))} 55%{transform:translate3d(var(--drift),var(--fall),0) rotate(var(--angle))} to{transform:translate3d(calc(var(--drift) * -1),calc(var(--fall) + 90px),0) rotate(var(--angle))} }
+@keyframes snow-real { from{transform:translate3d(0,-45px,0) rotate(0) scale(.58)} 42%{transform:translate3d(var(--drift),45px,0) rotate(110deg) scale(1.2)} to{transform:translate3d(calc(var(--drift) * -1),var(--fall),0) rotate(235deg) scale(.82)} }
+@keyframes petal-float { from{transform:translate3d(0,18px,0) rotate(-10deg) scale(.72)} to{transform:translate3d(var(--drift),-44px,0) rotate(28deg) scale(1.08)} }
+
+/* Snow can settle on the mast and cards, while the user's signature stays clear at bottom right. */
+body[data-weather="snow"] .archive-mast::before,
+body[data-weather="snow"] .page-mast::before {
+    content:""; position:absolute; z-index:2; top:-2px; right:-5px; left:-5px; height:12px;
+    background:linear-gradient(180deg,#fffdfa 0%,#eee8e2 52%,#b7aaab 100%);
+    clip-path:polygon(0 0,100% 0,100% 65%,92% 49%,84% 88%,72% 54%,62% 82%,51% 46%,40% 87%,29% 53%,19% 78%,8% 49%,0 70%);
+    filter:drop-shadow(0 6px 6px rgba(0,0,0,.28)); animation:snow-cap 18s ease-in-out infinite alternate;
+}
+body[data-weather="snow"] .paper-card::after,
+body[data-weather="snow"] .journal-card::after,
+body[data-weather="snow"] .book-card::after,
+body[data-weather="snow"] .gallery-tile::after,
+body[data-weather="snow"] .mechanism-widget::after,
+body[data-weather="snow"] .mechanism-list::after,
+body[data-weather="snow"] .component-fold::after {
+    content:""; position:absolute; z-index:2; top:-1px; right:10px; left:10px; height:8px; pointer-events:none;
+    background:linear-gradient(180deg,#fffdfa 0%,#eee8e2 55%,#b8abad 100%);
+    clip-path:polygon(0 0,100% 0,100% 65%,90% 48%,81% 92%,69% 53%,59% 79%,48% 46%,38% 86%,27% 54%,16% 75%,6% 48%,0 70%);
+    filter:drop-shadow(0 4px 5px rgba(0,0,0,.24)); animation:snow-cap-card 15s ease-in-out infinite alternate;
+}
+body[data-weather="snow"] .snowman { display:block; left:clamp(10px,5vw,70px); right:auto; opacity:.82; }
+body[data-weather="snow"] .signature-mark { opacity:.7; }
+@keyframes snow-cap { 0%,22%{height:7px} 58%{height:13px} 100%{height:19px} }
+@keyframes snow-cap-card { 0%,22%{height:5px} 58%{height:9px} 100%{height:14px} }
+
+@media(max-width:760px) {
+    .mood-switch,.weather-switch { right:14px; min-width:112px; padding:8px 10px; font-size:.76rem; }
+    .mood-switch { top:14px; }
+    .weather-switch { top:55px; }
+    .signature-mark { right:10px; bottom:14px; width:90px; }
+    .hero { width:calc(100% - 28px); min-height:0; padding:45px 23px 32px; }
+    .hero h1 { font-size:clamp(2.2rem,11vw,3.6rem)!important; }
+}
+
 /* Weather intensity breathes instead of falling as a perfect repeating sheet. */
 body[data-theme="rain"] .mood-particles-overlay {
     opacity:.84; animation:rain-intensity 7.5s ease-in-out infinite;
