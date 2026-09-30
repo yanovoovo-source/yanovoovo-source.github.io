@@ -1189,3 +1189,162 @@ body[data-theme="snow"] .card-status { color:#477072; }
     body[data-theme="bamboo"] .bamboo-edge { opacity:.3!important; }
     body[data-theme="snow"] .bamboo-edge { opacity:.16!important; }
 }
+
+/* The bamboo remains the landscape; only the sky and light above it change by mood. */
+body[data-theme="bamboo"] .world,
+body[data-theme="dusk"] .world,
+body[data-theme="rain"] .world {
+    background-image:url("https://images.unsplash.com/photo-1746543335497-e0f9265ef90a?auto=format&fit=crop&w=2400&q=82");
+    background-size:cover; background-position:center 42%; background-repeat:no-repeat;
+}
+body[data-theme="night"] .world {
+    background-image:linear-gradient(180deg,rgba(1,7,20,.48),rgba(2,13,20,.2) 66%,rgba(1,10,10,.32)),url("https://images.unsplash.com/photo-1746543335497-e0f9265ef90a?auto=format&fit=crop&w=2400&q=82");
+    background-size:cover; background-position:center 42%; background-repeat:no-repeat;
+}
+body[data-theme="bamboo"] .world::before {
+    background:radial-gradient(ellipse at 75% 15%,rgba(255,249,195,.5),transparent 23%),linear-gradient(180deg,rgba(35,126,131,.16),rgba(95,177,107,.12) 55%,rgba(205,216,147,.2));
+    -webkit-mask-image:linear-gradient(180deg,#000 0 54%,rgba(0,0,0,.66) 72%,transparent 100%); mask-image:linear-gradient(180deg,#000 0 54%,rgba(0,0,0,.66) 72%,transparent 100%);
+}
+body[data-theme="dusk"] .world::before {
+    background:radial-gradient(ellipse at 74% 42%,rgba(255,222,157,.75),transparent 18%),linear-gradient(180deg,rgba(22,30,74,.78),rgba(101,52,74,.52) 44%,rgba(224,134,76,.46) 82%,rgba(83,53,51,.2));
+    -webkit-mask-image:linear-gradient(180deg,#000 0 60%,rgba(0,0,0,.78) 82%,transparent 100%); mask-image:linear-gradient(180deg,#000 0 60%,rgba(0,0,0,.78) 82%,transparent 100%);
+}
+body[data-theme="night"] .world::before {
+    background:radial-gradient(ellipse at 74% 13%,rgba(187,224,212,.15),transparent 17%),linear-gradient(180deg,rgba(1,7,21,.9),rgba(3,17,29,.72) 58%,rgba(2,12,15,.38));
+    -webkit-mask-image:linear-gradient(180deg,#000 0 66%,rgba(0,0,0,.72) 86%,transparent 100%); mask-image:linear-gradient(180deg,#000 0 66%,rgba(0,0,0,.72) 86%,transparent 100%);
+}
+body[data-theme="rain"] .world::before {
+    background:radial-gradient(ellipse at 52% 17%,rgba(151,206,201,.18),transparent 25%),linear-gradient(180deg,rgba(8,26,40,.78),rgba(19,59,64,.56) 58%,rgba(9,38,37,.3));
+    -webkit-mask-image:linear-gradient(180deg,#000 0 58%,rgba(0,0,0,.7) 80%,transparent 100%); mask-image:linear-gradient(180deg,#000 0 58%,rgba(0,0,0,.7) 80%,transparent 100%);
+}
+
+/* Replace the flat seal with a small jade token and a restrained sword mark. */
+.seal {
+    position:relative; width:78px; height:78px; border:1px solid rgba(222,239,184,.8); outline:0; border-radius:50%;
+    background:radial-gradient(circle at 31% 24%,#6e9b6c 0%,#2b674f 44%,#103c32 100%);
+    box-shadow:0 14px 30px rgba(0,24,16,.44),inset 0 0 0 3px rgba(221,237,184,.1),inset 0 -8px 16px rgba(0,12,10,.28);
+    transform:none; transition:transform .24s ease,box-shadow .24s ease,background .24s ease;
+}
+.seal::before { content:""; position:absolute; inset:7px; border:1px solid rgba(224,238,187,.5); border-radius:50%; }
+.seal::after { content:""; position:absolute; top:12px; right:18px; width:25px; height:1px; background:rgba(230,240,198,.66); transform:rotate(-37deg); transform-origin:right center; box-shadow:0 0 7px rgba(225,239,190,.45); }
+.seal span { position:relative; z-index:1; color:#eff5d4; font-size:1.58rem; line-height:1; text-shadow:0 2px 7px rgba(1,23,16,.35); }
+.seal small { position:relative; z-index:1; color:#d3e4ad; font-size:.61rem; letter-spacing:.2em; }
+.seal:hover { transform:translateY(-3px) rotate(-2deg); background:radial-gradient(circle at 31% 24%,#86ad75 0%,#39785a 44%,#15503e 100%); box-shadow:0 18px 35px rgba(0,24,16,.5),inset 0 0 0 3px rgba(221,237,184,.14); }
+body[data-theme="dusk"] .seal { background:radial-gradient(circle at 31% 24%,#a87563 0%,#71454d 44%,#342533 100%); border-color:rgba(250,211,165,.78); }
+body[data-theme="night"] .seal { background:radial-gradient(circle at 31% 24%,#587b78 0%,#1d4c51 44%,#091d2b 100%); border-color:rgba(187,223,207,.72); }
+body[data-theme="snow"] .seal { background:radial-gradient(circle at 31% 24%,#9bb8ab 0%,#547d79 44%,#213f46 100%); border-color:rgba(238,249,227,.84); }
+@media(max-width:760px) { .seal { width:70px; height:70px; } }
+
+/* The user's own transparent ink emblem replaces the temporary jade badge. */
+.seal.seal-image {
+    width:118px; height:118px; padding:0; border:0; outline:0; border-radius:0;
+    background:transparent; box-shadow:none; overflow:visible;
+    display:grid; place-items:center; transform:none;
+}
+.seal.seal-image::before,
+.seal.seal-image::after { display:none; }
+.seal-image img {
+    display:block; width:100%; height:100%; object-fit:contain;
+    filter:drop-shadow(0 14px 18px rgba(0,10,8,.3));
+    transition:transform .24s ease,filter .24s ease;
+}
+.seal.seal-image:hover { transform:translateY(-3px); background:transparent; box-shadow:none; }
+.seal.seal-image:hover img {
+    transform:scale(1.04) rotate(-1deg);
+    filter:drop-shadow(0 18px 24px rgba(0,10,8,.4));
+}
+body[data-theme="dusk"] .seal.seal-image img { filter:drop-shadow(0 14px 18px rgba(27,12,12,.38)); }
+body[data-theme="night"] .seal.seal-image img { filter:drop-shadow(0 14px 18px rgba(0,3,12,.5)); }
+body[data-theme="snow"] .seal.seal-image img { filter:drop-shadow(0 14px 18px rgba(25,57,58,.28)); }
+@media(max-width:760px) {
+    .seal.seal-image { width:92px; height:92px; }
+}
+
+/* Weather intensity breathes instead of falling as a perfect repeating sheet. */
+body[data-theme="rain"] .mood-particles-overlay {
+    opacity:.84; animation:rain-intensity 7.5s ease-in-out infinite;
+}
+body[data-theme="snow"] .mood-particles-overlay {
+    opacity:.72; animation:snow-intensity 13s ease-in-out infinite;
+}
+body[data-theme="rain"] .mood-particles span {
+    min-height:24px; animation-timing-function:linear;
+}
+body[data-theme="snow"] .mood-particles span {
+    width:max(3px,var(--size)); height:max(3px,var(--size));
+    min-width:3px; min-height:3px; border-radius:var(--radius);
+    box-shadow:0 0 12px rgba(242,251,245,.62);
+}
+body.theme-changing .mood-particles-overlay { opacity:0!important; animation:none; }
+@keyframes rain-intensity { 0%,100%{opacity:.34} 33%{opacity:.62} 53%{opacity:.98} 72%{opacity:.52} }
+@keyframes snow-intensity { 0%,100%{opacity:.34} 36%{opacity:.62} 58%{opacity:.94} 78%{opacity:.5} }
+@keyframes snow-build { 0%,22%{height:7px} 56%{height:12px} 100%{height:18px} }
+@keyframes snow-build-card { 0%,24%{height:5px} 58%{height:9px} 100%{height:13px} }
+
+/* Snow settles on the UI itself, with uneven drips and slow accumulation. */
+body[data-theme="snow"] .archive-mast::before,
+body[data-theme="snow"] .page-mast::before {
+    height:11px; animation:snow-build 18s ease-in-out infinite alternate;
+}
+body[data-theme="snow"] .archive-board::after,
+body[data-theme="snow"] .page-frame::after {
+    height:10px; animation:snow-build 20s ease-in-out infinite alternate;
+    background:
+        radial-gradient(ellipse at 9% 0%,rgba(255,255,252,.98) 0 8px,transparent 8.5px),
+        radial-gradient(ellipse at 27% 0%,rgba(249,255,249,.95) 0 13px,transparent 13.5px),
+        radial-gradient(ellipse at 52% 0%,rgba(255,255,252,.96) 0 9px,transparent 9.5px),
+        radial-gradient(ellipse at 79% 0%,rgba(247,255,248,.94) 0 15px,transparent 15.5px),
+        linear-gradient(180deg,#ffffff 0%,#f2faf4 52%,#b9d1c9 100%);
+}
+body[data-theme="snow"] .paper-card::after,
+body[data-theme="snow"] .journal-card::after,
+body[data-theme="snow"] .book-card::after,
+body[data-theme="snow"] .gallery-tile::after,
+body[data-theme="snow"] .mechanism-widget::after,
+body[data-theme="snow"] .mechanism-list::after,
+body[data-theme="snow"] .component-fold::after {
+    top:-1px; height:8px; animation:snow-build-card 15s ease-in-out infinite alternate;
+    background:
+        radial-gradient(ellipse at 13% 0%,rgba(255,255,252,.98) 0 6px,transparent 6.5px),
+        radial-gradient(ellipse at 41% 0%,rgba(251,255,250,.96) 0 10px,transparent 10.5px),
+        radial-gradient(ellipse at 73% 0%,rgba(255,255,253,.96) 0 7px,transparent 7.5px),
+        linear-gradient(180deg,#ffffff 0%,#edf8f1 62%,#b9d1c9 100%);
+    clip-path:polygon(0 0,100% 0,100% 65%,91% 50%,81% 92%,70% 54%,61% 79%,49% 48%,39% 88%,28% 55%,17% 76%,7% 48%,0 70%);
+}
+body[data-theme="snow"] .component-fold { position:relative; }
+body[data-theme="snow"] .component-fold::after {
+    content:""; position:absolute; right:10px; left:10px; pointer-events:none;
+}
+body[data-theme="snow"] .paper-card:nth-child(2)::after,
+body[data-theme="snow"] .journal-card:nth-child(2)::after,
+body[data-theme="snow"] .book-card:nth-child(2)::after { animation-delay:-5s; transform:rotate(.45deg); }
+body[data-theme="snow"] .paper-card:nth-child(3)::after,
+body[data-theme="snow"] .journal-card:nth-child(3)::after,
+body[data-theme="snow"] .book-card:nth-child(3)::after { animation-delay:-9s; transform:rotate(-.7deg); }
+
+/* A small snow sculpture sits in front of the page edge, not as a flat sticker. */
+.snowman {
+    position:fixed; z-index:3; right:clamp(18px,8vw,124px); bottom:clamp(14px,5vh,58px);
+    width:104px; height:148px; display:none; pointer-events:none; opacity:.86;
+    background:radial-gradient(ellipse at 50% 100%,rgba(239,249,244,.78) 0 40px,rgba(203,222,216,.38) 41px,transparent 58px);
+    filter:drop-shadow(0 11px 14px rgba(35,59,59,.28)); transform:rotate(-2deg);
+}
+body[data-theme="snow"] .snowman { display:block; animation:snowman-settle 9s ease-in-out infinite alternate; }
+.snowman::before {
+    content:""; position:absolute; left:11px; bottom:0; width:82px; height:75px; border-radius:48% 52% 46% 54%;
+    background:radial-gradient(circle at 32% 23%,#ffffff 0 12%,#eef7f2 32%,#c8dbd7 100%);
+    box-shadow:14px -55px 0 -10px #f6fbf8, -7px 7px 0 -5px rgba(245,251,248,.95);
+}
+.snowman::after {
+    content:""; position:absolute; left:39px; top:56px; width:6px; height:6px; border-radius:50%; background:#3c5052;
+    box-shadow:15px 0 0 #3c5052, 7px 14px 0 -1px #b46e4e, -29px 26px 0 -2px #637c79, 46px 28px 0 -2px #637c79;
+}
+.snowman-hat { position:absolute; z-index:2; top:25px; left:25px; width:54px; height:25px; background:linear-gradient(180deg,#425957,#203638); clip-path:polygon(20% 0,80% 0,100% 100%,0 100%); }
+.snowman-hat::after { content:""; position:absolute; right:-12px; bottom:-5px; left:-12px; height:6px; border-radius:50%; background:#1d3334; box-shadow:0 2px 0 rgba(244,250,246,.34); }
+.snowman-scarf { position:absolute; z-index:3; top:65px; left:28px; width:55px; height:8px; background:#9a6a52; transform:rotate(-4deg); box-shadow:0 2px 0 rgba(85,62,56,.22); }
+.snowman-scarf::after { content:""; position:absolute; top:4px; right:1px; width:12px; height:29px; background:#9a6a52; transform:rotate(-8deg); }
+@keyframes snowman-settle { from{transform:translateY(0) rotate(-2deg)} to{transform:translateY(3px) rotate(-1deg)} }
+@media(max-width:760px) {
+    .snowman { right:8px; bottom:12px; transform:scale(.7) rotate(-2deg); transform-origin:bottom right; }
+    body[data-theme="snow"] .snowman { animation:none; }
+}

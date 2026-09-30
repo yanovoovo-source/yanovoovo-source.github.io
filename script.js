@@ -9,21 +9,23 @@ const fortunes=["此事宜缓行。风来之前，先把剑擦亮。","山重水
 const body=document.body,moodSwitch=document.querySelector("#moodSwitch"),moodIcon=document.querySelector("#moodIcon"),moodName=document.querySelector("#moodName"),sceneMood=document.querySelector("#sceneMood"),sceneLine=document.querySelector("#sceneLine"),particleField=document.querySelector("#moodParticles"),enterButton=document.querySelector("#enterButton"),jianghu=document.querySelector("#jianghu"),fortuneButton=document.querySelector("#fortuneButton"),fortuneText=document.querySelector("#fortuneText"),backToTop=document.querySelector("#backToTop"),todayLabel=document.querySelector("#todayLabel");
 if(particleField){
     const fragment=document.createDocumentFragment();
-    const particleCount=window.matchMedia("(max-width:760px)").matches?48:76;
+    const particleCount=window.matchMedia("(max-width:760px)").matches?112:216;
     for(let i=0;i<particleCount;i++){
         const particle=document.createElement("span");
         particle.style.setProperty("--x",`${Math.round(Math.random()*100)}%`);
         particle.style.setProperty("--y",`${Math.round(-8+Math.random()*116)}%`);
-        particle.style.setProperty("--size",`${(1.2+Math.random()*5).toFixed(1)}px`);
-        particle.style.setProperty("--length",`${Math.round(14+Math.random()*32)}px`);
-        particle.style.setProperty("--thickness",`${(.45+Math.random()*.9).toFixed(2)}px`);
-        particle.style.setProperty("--angle",`${Math.round(12+Math.random()*18)}deg`);
-        particle.style.setProperty("--alpha",`${(.28+Math.random()*.5).toFixed(2)}`);
-        particle.style.setProperty("--blur",`${(Math.random()*1.1).toFixed(2)}px`);
-        particle.style.setProperty("--delay",`${(-Math.random()*18).toFixed(2)}s`);
-        particle.style.setProperty("--duration",`${(6+Math.random()*17).toFixed(2)}s`);
-        particle.style.setProperty("--drift",`${Math.round(-58+Math.random()*116)}px`);
-        particle.style.setProperty("--fall",`${Math.round(90+Math.random()*120)}px`);
+        particle.style.setProperty("--size",`${(1.4+Math.random()*6.8).toFixed(1)}px`);
+        particle.style.setProperty("--length",`${Math.round(28+Math.random()*86)}px`);
+        particle.style.setProperty("--thickness",`${(.65+Math.random()*1.8).toFixed(2)}px`);
+        particle.style.setProperty("--angle",`${Math.round(7+Math.random()*27)}deg`);
+        particle.style.setProperty("--alpha",`${(.28+Math.random()*.68).toFixed(2)}`);
+        particle.style.setProperty("--blur",`${(Math.random()*1.9).toFixed(2)}px`);
+        particle.style.setProperty("--radius",`${Math.round(36+Math.random()*64)}%`);
+        particle.style.setProperty("--delay",`${(-Math.random()*24).toFixed(2)}s`);
+        particle.style.setProperty("--duration",`${(5.5+Math.random()*22).toFixed(2)}s`);
+        particle.style.setProperty("--drift",`${Math.round(-90+Math.random()*180)}px`);
+        particle.style.setProperty("--fall",`${Math.round(170+Math.random()*360)}px`);
+        particle.dataset.depth=i%3===0?"near":i%3===1?"mid":"far";
         fragment.appendChild(particle);
     }
     particleField.appendChild(fragment);
