@@ -1508,3 +1508,150 @@ body[data-theme="snow"] .snowman { display:block; animation:snowman-settle 9s ea
     .snowman { right:8px; bottom:12px; transform:scale(.7) rotate(-2deg); transform-origin:bottom right; }
     body[data-theme="snow"] .snowman { animation:none; }
 }
+
+/* The scene card and every inner-page accent use the painting's ink and vermilion palette. */
+.hero-scene {
+    border-color:rgba(224,169,132,.28);
+    background:linear-gradient(150deg,rgba(45,27,30,.55),rgba(13,10,15,.78))!important;
+    box-shadow:inset 0 0 0 8px rgba(255,227,205,.025),0 22px 55px rgba(0,0,0,.3);
+}
+.hero-scene::before { border-color:rgba(225,183,146,.21)!important; }
+.wuxia-stilllife { opacity:.23; filter:sepia(.9) saturate(.75) hue-rotate(325deg); }
+.scroll-hint { color:#c7b0a2; }
+.signature-note { color:#c7ada3; border-left-color:rgba(223,168,125,.43); }
+.signature-note span { color:#e0ad6b; }
+.archive-board,.page-frame { --frame-line:rgba(223,177,145,.22); --frame-mark:#cd7355; }
+.archive-mark { color:#e5b06c; border-color:rgba(224,176,140,.48); background:rgba(148,55,45,.17); }
+.archive-mast::after { background:#d0a063; }
+.scene-plate {
+    background:linear-gradient(145deg,rgba(54,29,33,.74),rgba(13,11,16,.68))!important;
+    border-left-color:rgba(225,176,133,.66); border-bottom-color:rgba(225,176,133,.31);
+    box-shadow:17px 18px 35px rgba(0,0,0,.13);
+}
+.scene-plate::before { background:#d6a363; }
+.scene-index { color:#d6a363; }
+.scene-plate strong { color:#f1dfd5; }
+.scene-plate p { color:#c9b2a8; }
+.scene-rule { background:linear-gradient(90deg,#c85c46,#e0b15d); }
+.site-nav a:hover,.back-home:hover { color:#f6d7b0; background:rgba(164,54,42,.14); }
+.site-nav a.active::after { background:#cf7654; }
+.back-home { color:#d9a568; }
+.page-mast p,.journal-intro p,.library-intro p,.gallery-intro p,.mechanism-intro p { color:#bca8a0; }
+.journal-intro h2,.library-intro h2,.gallery-intro h2,.mechanism-intro h2 { color:#eee0d7; }
+.quote-panel { border-left-color:#c96c50; background:rgba(76,31,33,.34); }
+.quote-panel p { color:#e6d4ca; }
+.quote-panel small { color:#c5a8a0; }
+.book-progress { height:3px; background:rgba(226,180,141,.18); border-radius:99px; overflow:hidden; }
+.book-progress i { border-radius:inherit; background:linear-gradient(90deg,#a64438,#d77553 64%,#e3b267); box-shadow:0 0 8px rgba(215,117,83,.45); }
+.mechanism-widget p { color:#d5bdb1; }
+.mechanism-widget button,.fortune-box button,#backToTop {
+    color:#e9bd80; background:rgba(126,44,37,.1); border:1px solid rgba(225,169,113,.52);
+    transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.mechanism-widget button:hover,.fortune-box button:hover,#backToTop:hover,
+.mechanism-widget button:focus-visible,.fortune-box button:focus-visible,#backToTop:focus-visible {
+    color:#fff1df; background:#873d34; border-color:#e0ae73; transform:translateY(-2px);
+}
+.mechanism-widget button:active,.fortune-box button:active,#backToTop:active { transform:translateY(0); background:#a84b3c; }
+.mechanism-list li { border-bottom-color:rgba(224,176,140,.17); }
+.component-fold summary::after { color:#d9a15f; }
+.component-fold summary:hover { background:rgba(156,55,47,.13); }
+.component-fold .fold-body strong { color:#ead1bc; }
+.gallery-tile::before { border-color:rgba(233,188,150,.2); }
+.gallery-tile span { color:#f0ded2; }
+.gallery-tile small { color:#e0b27a; }
+.image-window { border-color:rgba(224,176,140,.31); background:linear-gradient(150deg,#302128,#713e3d 58%,#1b161d)!important; }
+.image-window .sun { background:#e7bb75; box-shadow:0 0 18px rgba(231,174,99,.6); }
+.image-window .ridge { background:linear-gradient(145deg,#371b22,#7e3e35); }
+
+/* Rain and snow travel from the top of the viewport to its bottom. */
+body[data-weather="rain"] .mood-particles span,
+body[data-weather="snow"] .mood-particles span { top:-74px; animation-delay:var(--delay); animation-iteration-count:infinite; animation-direction:normal; }
+body[data-weather="rain"] .mood-particles span {
+    height:var(--length); width:var(--thickness); opacity:var(--alpha);
+    background:linear-gradient(180deg,transparent,rgba(223,226,229,.82) 55%,rgba(174,193,203,.32));
+    box-shadow:none; filter:blur(var(--blur)); transform-origin:center;
+    animation:rain-drop var(--rain-duration) linear var(--delay) infinite;
+}
+body[data-weather="rain"] .mood-particles span[data-depth="far"] { opacity:.25; filter:blur(.85px); }
+body[data-weather="rain"] .mood-particles span[data-depth="near"] { opacity:.84; }
+body[data-weather="snow"] .mood-particles span {
+    height:var(--size); width:var(--size); opacity:var(--alpha); border-radius:var(--radius);
+    background:radial-gradient(circle at 34% 29%,#fff 0 24%,#f0efed 62%,#d2d7d7 100%);
+    box-shadow:0 0 3px rgba(255,255,255,.26); filter:blur(var(--blur));
+    animation:snow-drop var(--snow-duration) linear var(--delay) infinite;
+}
+body[data-weather="snow"] .mood-particles span[data-depth="far"] { opacity:.34; filter:blur(1.3px); scale:.7; }
+body[data-weather="snow"] .mood-particles span[data-depth="near"] { opacity:.88; filter:blur(.2px); }
+@keyframes rain-drop {
+    from { transform:translate3d(0,0,0) rotate(var(--angle)); }
+    to { transform:translate3d(var(--rain-drift),calc(100vh + 160px),0) rotate(var(--angle)); }
+}
+@keyframes snow-drop {
+    0% { transform:translate3d(0,0,0); }
+    33% { transform:translate3d(var(--snow-drift),calc(33vh + 45px),0); }
+    66% { transform:translate3d(0,calc(66vh + 90px),0); }
+    100% { transform:translate3d(var(--snow-drift),calc(100vh + 160px),0); }
+}
+
+/* Irregular snow is layered over the card edge and slowly thickens in snowfall. */
+body[data-weather="snow"] .archive-mast::before,
+body[data-weather="snow"] .page-mast::before,
+body[data-weather="snow"] .paper-card::after,
+body[data-weather="snow"] .journal-card::after,
+body[data-weather="snow"] .book-card::after,
+body[data-weather="snow"] .gallery-tile::after,
+body[data-weather="snow"] .mechanism-widget::after,
+body[data-weather="snow"] .mechanism-list::after,
+body[data-weather="snow"] .component-fold::after,
+body[data-weather="snow"] .shelf-note article::after {
+    top:-2px; right:8px; left:8px; width:auto; border:0; clip-path:none; pointer-events:none;
+    background:
+        radial-gradient(ellipse 48px 76% at 8% -8%,#faf8f5 96%,transparent 100%),
+        radial-gradient(ellipse 70px 58% at 32% -10%,#f4f0ed 96%,transparent 100%),
+        radial-gradient(ellipse 39px 88% at 54% -5%,#fffdfa 96%,transparent 100%),
+        radial-gradient(ellipse 63px 64% at 81% -11%,#eee9e7 96%,transparent 100%),
+        radial-gradient(ellipse 45px 75% at 98% -7%,#f8f5f2 96%,transparent 100%),
+        linear-gradient(180deg,#fffdfa,#d6cbcb) top / 100% 5px no-repeat;
+    filter:drop-shadow(0 3px 2px rgba(15,12,15,.29));
+    animation:snow-lip 22s ease-in-out infinite alternate;
+}
+body[data-weather="snow"] .paper-card:nth-child(2)::after,
+body[data-weather="snow"] .book-card:nth-child(2)::after { animation-delay:-7s; }
+body[data-weather="snow"] .paper-card:nth-child(3)::after,
+body[data-weather="snow"] .book-card:nth-child(3)::after { animation-delay:-13s; }
+.shelf-note article { position:relative; }
+body[data-weather="snow"] .shelf-note article::after { content:""; position:absolute; z-index:2; }
+@keyframes snow-lip { from{height:8px} 45%{height:13px} to{height:20px} }
+
+/* A small uneven snow figure, built from snow and twigs. */
+.snowman {
+    left:max(12px,calc((100vw - 1140px)/2 - 31px)); right:auto; bottom:13px; width:88px; height:103px;
+    background:none; filter:drop-shadow(5px 7px 9px rgba(0,0,0,.44)); transform:rotate(-4deg);
+}
+body[data-weather="snow"] .snowman { left:max(12px,calc((100vw - 1140px)/2 - 31px)); animation:none; opacity:.75; }
+.snowman::before {
+    left:10px; bottom:4px; width:66px; height:54px; border-radius:44% 56% 39% 53%;
+    background:radial-gradient(circle at 29% 18%,#f2efec 0 13%,#dbd8d5 56%,#969294 100%);
+    box-shadow:inset -8px -7px 13px rgba(70,66,75,.23),0 4px 5px rgba(16,14,19,.31);
+}
+.snowman::after {
+    left:26px; top:13px; width:36px; height:38px; border-radius:48% 54% 46% 51%;
+    background:radial-gradient(circle at 31% 20%,#f5f1ee 0 13%,#dedbd8 61%,#a19da0 100%);
+    box-shadow:inset -5px -6px 9px rgba(80,74,83,.22),0 3px 5px rgba(19,16,22,.24);
+}
+.snowman-hat { z-index:4; top:31px; left:39px; width:2px; height:2px; border-radius:50%; clip-path:none; background:#676063; box-shadow:9px 1px 0 #676063,5px 9px 0 -1px #aa7250; }
+.snowman-hat::before,.snowman-hat::after { display:none; }
+.snowman-scarf { z-index:5; top:47px; left:32px; width:31px; height:4px; border-radius:45%; background:#81504b; transform:rotate(7deg); box-shadow:0 2px 2px rgba(47,21,24,.2); }
+.snowman-scarf::after { top:1px; right:2px; width:5px; height:13px; background:#76443e; }
+@media(max-width:760px) {
+    body[data-weather="snow"] .snowman { left:5px; right:auto; bottom:10px; transform:scale(.72) rotate(-4deg); transform-origin:bottom left; }
+}
+@media(prefers-reduced-motion:reduce) {
+    body[data-weather="rain"] .mood-particles span,
+    body[data-weather="snow"] .mood-particles span,
+    body[data-weather="snow"] .archive-mast::before,
+    body[data-weather="snow"] .page-mast::before,
+    body[data-weather="snow"] .paper-card::after,
+    body[data-weather="snow"] .book-card::after { animation:none; }
+}
