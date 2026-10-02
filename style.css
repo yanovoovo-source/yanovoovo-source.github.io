@@ -416,7 +416,7 @@ main { width:min(1140px,calc(100% - 64px)); padding:0 0 70px; }
 .image-window { min-height:164px; border:1px solid rgba(190,218,160,.2); background:linear-gradient(160deg,#102f25,#173f2d 55%,#0a2018); box-shadow:none; }
 .image-window .sun { top:22px; right:22px; width:32px; background:#dbe8b8; box-shadow:0 0 18px rgba(219,232,184,.55); }
 .image-window .ridge { background:linear-gradient(145deg,#173c2b,#2f6345); }
-.learn-card li { padding:8px 0; border-bottom:1px solid rgba(188,215,160,.12); }
+.learn-card li { padding:8px 0; color:#c9b3a8; border-bottom:1px solid rgba(220,171,136,.18); }
 .learn-card li span { width:54px; font-family:Consolas,monospace; }
 
 .trail-section { display:grid; grid-template-columns:minmax(190px,.72fr) minmax(0,1.28fr); gap:34px; margin:36px 0 0; padding:38px 4px 41px; border-block:1px solid rgba(180,211,160,.16); }
@@ -438,7 +438,7 @@ main { width:min(1140px,calc(100% - 64px)); padding:0 0 70px; }
 .future { max-width:none; margin:0; padding:38px 4px 16px; text-align:left; }
 .future h2 { margin-bottom:12px; color:#dcebd4; font-size:clamp(1.8rem,3.4vw,2.7rem); }
 .future>p:not(.section-number) { max-width:560px; color:#7e9988; font-size:.84rem; }
-.future-links { justify-content:flex-start; gap:12px; margin-top:24px; color:#a6c181; font-size:.72rem; }
+.future-links { justify-content:flex-start; gap:12px; margin-top:24px; color:#d7aa78; font-size:.72rem; }
 footer { width:min(1140px,calc(100% - 64px)); margin:0 auto; padding:22px 4px 32px; color:#728b7a; background:transparent; border-top:1px solid rgba(180,211,160,.13); }
 footer p { font-size:.68rem; letter-spacing:.12em; }
 
