@@ -12,6 +12,11 @@
 .music-actions { display:flex; gap:8px; margin:14px 0; }
 .music-actions button { flex:1; padding:8px; background:#73382f; color:#f1d7b7; border:1px solid #ae795a; border-radius:3px; cursor:pointer; }
 .music-actions button:hover { background:#954b3b; }
+.music-actions #musicPlay { flex:2; }
+.music-note a { color:#d8b387; text-decoration:none; }
+.music-note a:hover { color:#ffe0b5; text-decoration:underline; }
+.music-seek { display:block; width:100%; margin:0; accent-color:#bd7755; }
+.music-time { margin:7px 0 15px; color:#baa69d; text-align:right; font-size:.65rem; font-variant-numeric:tabular-nums; }
 .music-actions button:disabled { opacity:.5; cursor:wait; }
 .music-volume { display:flex; align-items:center; gap:8px; color:#c6ac9c; }
 .music-volume input { min-width:0; width:125px; accent-color:#bd7755; }
@@ -44,6 +49,23 @@ body[data-weather="snow"] .snowman { z-index:4; bottom:22px; opacity:.94; }
 .snowman-nose:focus-visible { outline:1px dashed #ecd3a8; outline-offset:4px; border-radius:40%; }
 .snowman-hint { position:absolute; z-index:8; top:-13px; left:0; width:116px; padding:4px 6px; color:#ddc6b1; background:#251c25d9; border:1px solid #78584c; border-radius:3px; font-size:10px; text-align:center; white-space:nowrap; transform:rotate(4deg); }
 .snowman:hover .snowman-hint { color:#ffe6bd; border-color:#b68b69; }
+.snowman.desktop-pet { width:88px; height:103px; transform:none !important; user-select:none; }
+.desktop-pet .snowman-nose { cursor:grab; touch-action:none; -webkit-tap-highlight-color:transparent; }
+.desktop-pet.is-dragging .snowman-nose { cursor:grabbing; }
+.desktop-pet .snowman-hint { top:-24px; transform:none; pointer-events:none; }
+.desktop-pet:not(.has-scarf) .snowman-scarf { display:none; }
+.pet-bamboo-hat { display:none; position:absolute; z-index:6; top:5px; left:13px; width:64px; height:24px; background:repeating-linear-gradient(75deg,transparent 0 4px,#674b3440 4px 5px),linear-gradient(165deg,#d0ac70 12%,#8f6c42 65%,#4b352b); clip-path:polygon(50% 0,100% 85%,94% 95%,48% 100%,4% 94%,0 85%); }
+.has-bamboo-hat .pet-bamboo-hat { display:block; }
+.pet-wardrobe { position:absolute; z-index:12; left:calc(100% + 8px); bottom:0; width:152px; padding:12px; color:#e6c5ac; background:linear-gradient(145deg,#312025f5,#161119f5); border:1px solid #8f6450; border-radius:5px; box-shadow:0 12px 30px #0006; pointer-events:auto; }
+.pet-wardrobe[hidden] { display:none; }
+.snowman:has(.pet-wardrobe:not([hidden])) { z-index:13; }
+.pet-wardrobe p { margin:0 0 9px; color:#e2ba80; font-size:12px; letter-spacing:.12em; }
+.pet-wardrobe button { display:block; width:100%; padding:7px 9px; margin-top:6px; font:inherit; font-size:12px; text-align:left; color:#dcc7b8; background:#332229; border:1px solid #6f4d46; border-radius:3px; cursor:pointer; }
+.pet-wardrobe button[aria-pressed="true"] { color:#ffe3b5; background:#703a32; border-color:#ba8967; }
+.pet-wardrobe button:hover { border-color:#d5ae80; }
+.pet-wardrobe button:focus-visible { outline:2px solid #e5b372; outline-offset:2px; }
+.pet-menu-left .pet-wardrobe { left:auto; right:calc(100% + 8px); }
+.pet-menu-down .pet-wardrobe { top:0; bottom:auto; }
 @media(max-width:760px) {
     .music-box { right:14px; top:96px; width:112px; font-size:.7rem; }
     .music-box summary { padding:8px 10px; }
