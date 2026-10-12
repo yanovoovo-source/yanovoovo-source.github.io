@@ -87,13 +87,26 @@
     });
     const ground = document.createElement('div');
     ground.className = 'snow-floor'; ground.setAttribute('aria-hidden', 'true'); document.body.append(ground);
-    let snowDepth = .2;
-    setInterval(() => {
-        if (document.hidden) return;
-        if (document.body.dataset.weather === 'snow') snowDepth = Math.min(1, snowDepth + .009);
-        else snowDepth = .2;
+    let snowDepth = .2, snowTimer = 0, snowfall = .7;
+    function growSnow() {
+        snowTimer = 0;
+        if (document.hidden || document.body.dataset.weather !== 'snow' || snowDepth >= 1) return;
+        snowDepth = Math.min(1, snowDepth + (.004 + snowfall * .009) * 3);
         document.body.style.setProperty('--snow-depth', snowDepth.toFixed(3));
-    }, 1000);
+        if (snowDepth < 1) snowTimer = setTimeout(growSnow, 3000);
+    }
+    function syncSnow() {
+        clearTimeout(snowTimer); snowTimer = 0;
+        if (document.body.dataset.weather !== 'snow') {
+            if (snowDepth !== .2) { snowDepth = .2; document.body.style.setProperty('--snow-depth', '.2'); }
+        } else if (!document.hidden && snowDepth < 1) snowTimer = setTimeout(growSnow, 3000);
+    }
+    new MutationObserver(syncSnow).observe(document.body, {attributes:true,attributeFilter:['data-weather']});
+    window.addEventListener('jianghu-weather-pulse', event => { snowfall = event.detail.intensity; });
+    document.addEventListener('visibilitychange', syncSnow);
+    window.addEventListener('pagehide', () => { clearTimeout(snowTimer); snowTimer = 0; });
+    window.addEventListener('pageshow', syncSnow);
+    syncSnow();
     const snowman = document.querySelector('.snowman');
     if (snowman) {
         snowman.removeAttribute('aria-hidden');
@@ -119,7 +132,7 @@
             const key = button.dataset.dress; dress[key] = !dress[key]; save(`jianghu-pet-${key}`, String(dress[key])); syncDress();
         });
         syncDress();
-        let x = 0, y = 0, dragging = null, suppressClick = false;
+        let x = 0, y = 0, dragging = null, suppressClick = false, dragFrame = 0;
         const petHeightLimit = () => Math.max(30, innerHeight - (innerWidth <= 760 ? 185 : 115));
         function place(left, top) {
             x = Math.max(8, Math.min(Math.max(8, innerWidth - 96), left));
@@ -147,11 +160,20 @@
             if (!dragging || dragging.id !== event.pointerId) return;
             const dx = event.clientX - dragging.x, dy = event.clientY - dragging.y;
             if (!dragging.moved && Math.hypot(dx, dy) < 5) return;
-            dragging.moved = true; closeWardrobe(); snowman.classList.add('is-dragging');
-            place(dragging.left + dx, dragging.top + dy);
+            if (!dragging.moved) { dragging.moved = true; closeWardrobe(); snowman.classList.add('is-dragging'); }
+            dragging.targetX = Math.max(8, Math.min(Math.max(8, innerWidth - 96), dragging.left + dx));
+            dragging.targetY = Math.max(30, Math.min(petHeightLimit(), dragging.top + dy));
+            if (!dragFrame) dragFrame = requestAnimationFrame(() => {
+                dragFrame = 0; if (!dragging) return;
+                snowman.style.setProperty('--pet-dx', `${dragging.targetX - dragging.left}px`);
+                snowman.style.setProperty('--pet-dy', `${dragging.targetY - dragging.top}px`);
+            });
         });
         function release(event) {
             if (!dragging || dragging.id !== event.pointerId) return;
+            cancelAnimationFrame(dragFrame); dragFrame = 0;
+            if (dragging.moved) place(dragging.targetX, dragging.targetY);
+            snowman.style.setProperty('--pet-dx', '0px'); snowman.style.setProperty('--pet-dy', '0px');
             suppressClick = dragging.moved; if (dragging.moved) persistPosition();
             dragging = null; snowman.classList.remove('is-dragging');
             if (nose.hasPointerCapture(event.pointerId)) nose.releasePointerCapture(event.pointerId);

@@ -46,7 +46,9 @@ try {
     const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
     await call('Page.enable');await call('Runtime.enable');
     const pages=['index.html','journal.html','library.html','gallery.html','mechanism.html'];
-    for(const width of [320,375,768,1440])for(const page of pages){
+    const profiling=process.argv.includes('--profile');
+    if(profiling)await call('Performance.enable');
+    for(const width of profiling?[375,1440]:[320,375,768,1440])for(const page of profiling?['index.html']:pages){
         await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<761});
         await call('Page.navigate',{url:`${origin}/${page}`});
         let ready=false;for(let i=0;i<70;i++){ready=await evaluate(`document.readyState==='complete'&&document.querySelector('#musicTrack')?.options.length===13`);if(ready)break;await pause(100)}
@@ -56,10 +58,18 @@ try {
             const controls=[...document.querySelector('.scene-controls').children].map(el=>el.getBoundingClientRect());
             const music=document.querySelector('.music-box');music.open=true;const panel=document.querySelector('.music-content').getBoundingClientRect();music.open=false;
             document.body.dataset.weather='snow';const pet=document.querySelector('.snowman'),face=document.querySelector('.snowman-nose');face.click();const wardrobe=document.querySelector('.pet-wardrobe').getBoundingClientRect(),petBox=pet.getBoundingClientRect();face.click();document.body.dataset.weather='clear';
-            return {overflow:document.documentElement.scrollWidth>innerWidth,toolbar:controls.every((a,i)=>controls.every((b,j)=>i===j||a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top)),music:panel.left>=0&&panel.right<=innerWidth+1&&panel.top>=0&&panel.bottom<=innerHeight+1,wardrobe:wardrobe.left>=0&&wardrobe.right<=innerWidth+1,pet:innerWidth>760||petBox.bottom<=document.querySelector('.scene-controls').getBoundingClientRect().top,signature:!!document.querySelector('.signature-mark'),current:document.querySelectorAll('[aria-current="page"]').length===1};
+            return {overflow:document.documentElement.scrollWidth>innerWidth,toolbar:controls.every((a,i)=>controls.every((b,j)=>i===j||a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top)),music:panel.left>=0&&panel.right<=innerWidth+1&&panel.top>=0&&panel.bottom<=innerHeight+1,wardrobe:wardrobe.left>=0&&wardrobe.right<=innerWidth+1,pet:innerWidth>760||petBox.bottom<=document.querySelector('.scene-controls').getBoundingClientRect().top,signature:!!document.querySelector('.signature-mark'),current:document.querySelectorAll('[aria-current="page"]').length===1,canvas:document.querySelectorAll('#moodParticles canvas').length===1&&document.querySelectorAll('#moodParticles span').length===0};
         })()`);
         if(checks.overflow||Object.entries(checks).some(([key,value])=>key!=='overflow'&&!value))throw new Error(`${width}px ${page}: ${JSON.stringify(checks)}`);
         console.log(`PASS ${width}px ${page}`);
+        if(profiling)for(const weather of ['clear','rain','snow']){
+            await evaluate(`document.body.dataset.weather='${weather}'`);await pause(300);
+            const before=(await call('Performance.getMetrics')).metrics;
+            const frames=await evaluate(`new Promise(resolve=>{const start=performance.now();let last=start,frames=0,slow=0;function step(now){if(now-last>25)slow++;last=now;frames++;window.scrollTo(0,Math.max(0,Math.sin((now-start)/600)*500+500));if(now-start<2000)requestAnimationFrame(step);else resolve({frames,slow})}requestAnimationFrame(step)})`);
+            const after=(await call('Performance.getMetrics')).metrics;
+            const delta=name=>Math.round(((after.find(m=>m.name===name)?.value||0)-(before.find(m=>m.name===name)?.value||0))*1000);
+            console.log(JSON.stringify({width,weather,...frames,taskMs:delta('TaskDuration'),layoutMs:delta('LayoutDuration'),styleMs:delta('RecalcStyleDuration')}));
+        }
         if(page==='index.html'&&(width===375||width===1440)){
             await pause(450);const shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});fs.writeFileSync(path.join(evidence,`home-${width}.png`),Buffer.from(shot.data,'base64'));
         }
@@ -68,10 +78,26 @@ try {
     const pet=await evaluate(`(() => {const r=document.querySelector('.snowman-nose').getBoundingClientRect();return {x:r.left+40,y:r.top+35}})()`);
     await call('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:pet.x,y:pet.y});
     await call('Input.dispatchMouseEvent',{type:'mouseMoved',button:'left',buttons:1,x:pet.x+80,y:pet.y-60});
+    await pause(40);
+    await evaluate(`(() => {const pet=document.querySelector('.snowman');if(Math.round(pet.getBoundingClientRect().left-parseFloat(pet.style.left))!==80)throw new Error('Drag not composited')})()`);
     await call('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:pet.x+80,y:pet.y-60});
     await evaluate(`(() => {const pet=document.querySelector('.snowman'),face=document.querySelector('.snowman-nose'),menu=document.querySelector('.pet-wardrobe');if(parseFloat(pet.style.left)<80)throw new Error('Pet drag');if(!menu.hidden)throw new Error('Dragging opens wardrobe');face.click();if(menu.hidden)throw new Error('Wardrobe');const hat=pet.classList.contains('has-bamboo-hat');menu.querySelector('[data-dress="hat"]').click();if(hat===pet.classList.contains('has-bamboo-hat'))throw new Error('Hat toggle');document.body.dataset.weather='clear';if(getComputedStyle(pet).display!=='none')throw new Error('Clear weather pet visibility')})()`);
+    await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});
+    await call('Emulation.setTouchEmulationEnabled',{enabled:true});
+    await evaluate(`document.body.dataset.weather='snow'`);await pause(50);
+    const touch=await evaluate(`(() => {const r=document.querySelector('.snowman-nose').getBoundingClientRect();return {x:r.left+40,y:r.top+35,left:parseFloat(document.querySelector('.snowman').style.left)}})()`);
+    await call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:touch.x,y:touch.y}]});
+    await call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:touch.x+25,y:touch.y-45}]});
+    await pause(40);await call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    const touchLeft=await evaluate(`parseFloat(document.querySelector('.snowman').style.left)`);
+    if(Math.abs(touchLeft-touch.left)<5)throw new Error('Touch drag failed');
+    await evaluate(`document.querySelector('#moodSwitch').click();document.querySelector('#moodSwitch').click()`);await pause(650);
+    await evaluate(`(() => {const id=document.body.dataset.scene.slice(-2);if(![...document.querySelectorAll('.scene-background-layer')].some(el=>el.style.opacity==='1'&&el.style.backgroundImage.includes('scene-'+id+'.jpg')))throw new Error('Background decode race')})()`);
+    await call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await pause(30);
+    await evaluate(`if(getComputedStyle(document.querySelector('#moodParticles canvas')).display!=='none')throw new Error('Reduced motion')`);
+    await call('Emulation.setEmulatedMedia',{features:[]});
     if(errors.length)throw new Error(errors.join('\n'));
-    console.log('PASS playlist / real mouse drag / wardrobe / weather visibility');
+    console.log('PASS playlist / composited mouse and touch drag / wardrobe / weather / background switching / reduced motion');
     console.log('Screenshots: '+evidence);
 } finally {
     if(ws)ws.close();chrome.kill();await new Promise(resolve=>server.close(resolve));

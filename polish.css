@@ -182,3 +182,23 @@ footer p { font-size:.7rem; letter-spacing:.08em; }
     body[data-weather="snow"] .snow-floor { bottom:63px; opacity:.75; }
 }
 @media(prefers-reduced-motion:reduce) { .gallery-tile img,.card-link span,.entry-link { transition:none; } }
+
+/* Performance: one weather surface, two decoded backgrounds, no large live blur. */
+.world,.world *,.world::before,.world::after,.world *::before,.world *::after { animation:none!important; transition:none!important; }
+body.has-scene-background::before { display:none; }
+.scene-background { position:fixed; z-index:-3; inset:0; pointer-events:none; overflow:hidden; }
+.scene-background-layer { position:absolute; inset:0; background-position:center; background-size:cover; background-repeat:no-repeat; opacity:0; transition:opacity .45s ease; will-change:opacity; }
+.archive-board,.page-frame,.paper-card,.mood-switch,.weather-switch,.music-box summary,.scene-controls { backdrop-filter:none; -webkit-backdrop-filter:none; }
+body[data-weather] .mood-particles-overlay { position:fixed; inset:0; contain:strict; opacity:1!important; animation:none!important; transition:none; mix-blend-mode:normal; }
+.mood-particles canvas { display:block; width:100%; height:100%; pointer-events:none; }
+.settled-snow { height:30px; transform:scaleY(calc(.4 + var(--snow-depth,.2) * .6)); transform-origin:center bottom; transition:transform 3s linear; filter:none; }
+.archive-mast>.settled-snow,.page-mast>.settled-snow { height:20px; }
+.snow-floor { height:62px; transform:scaleY(calc(.613 + var(--snow-depth,.2) * .387)); transform-origin:center bottom; transition:transform 3s linear; filter:none; }
+body[data-weather] .snowman.desktop-pet { transform:translate3d(var(--pet-dx,0px),var(--pet-dy,0px),0)!important; }
+.snowman.is-dragging { will-change:transform; }
+.reveal { transform:translateY(14px); transition:opacity .35s ease,transform .35s ease; }
+.reveal.visible { transform:none; }
+@media(prefers-reduced-motion:reduce) {
+    .scene-background-layer,.settled-snow,.snow-floor { transition:none; }
+    .mood-particles canvas { display:none; }
+}
