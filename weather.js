@@ -11,7 +11,7 @@
     if (!field || !ctx) return;
     field.replaceChildren(canvas); field.dataset.renderer = 'canvas';
     let width=0, height=0, mode='', particles=[], frame=0, last=0, sample=0, slow=0;
-    let intensity=.7, targetIntensity=.7, nextGust=0, lastPulse=0, resizeFrame=0;
+    let intensity=.7, targetIntensity=.7, nextGust=0, lastPulse=0, resizeTimer=0;
     const random=(min,max)=>min+Math.random()*(max-min);
     const snowSprite=document.createElement('canvas'); snowSprite.width=snowSprite.height=24;
     const snowContext=snowSprite.getContext('2d');
@@ -31,10 +31,18 @@
     }
     function rebuild() { particles=Array.from({length:budget()},()=>seed());field.dataset.particles=String(particles.length); }
     function resize() {
-        width=innerWidth;height=innerHeight;
+        const nextWidth=innerWidth,nextHeight=innerHeight;
         const ratio=Math.min(devicePixelRatio || 1,lowPower?1:compact.matches?1.25:1.5);
-        canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);
-        ctx.setTransform(ratio,0,0,ratio,0,0);rebuild();
+        const pixelWidth=Math.round(nextWidth*ratio),pixelHeight=Math.round(nextHeight*ratio);
+        if(width===nextWidth&&height===nextHeight&&canvas.width===pixelWidth&&canvas.height===pixelHeight)return;
+        // Keep the same falling particles when mobile browser chrome or orientation changes.
+        const scaleX=width?nextWidth/width:1,scaleY=height?nextHeight/height:1;
+        width=nextWidth;height=nextHeight;
+        particles.forEach(p=>{p.x*=scaleX;p.y*=scaleY;});
+        canvas.width=pixelWidth;canvas.height=pixelHeight;ctx.setTransform(ratio,0,0,ratio,0,0);
+        const count=budget();particles.length=Math.min(particles.length,count);
+        while(particles.length<count)particles.push(seed());
+        field.dataset.particles=String(particles.length);
     }
     function stop() { cancelAnimationFrame(frame);frame=0;last=0; }
     function start() { if (!frame&&!document.hidden&&!reduceMotion.matches) frame=requestAnimationFrame(draw); }
@@ -108,9 +116,10 @@
         if(records.some(r=>r.attributeName==='data-weather'))updateWeather();
         if(records.some(r=>r.attributeName==='data-scene'))updateScene();
     }).observe(body,{attributes:true,attributeFilter:['data-weather','data-scene']});
-    addEventListener('resize',()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(resize);},{passive:true});
+    addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,140);},{passive:true});
     document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else start();});
-    addEventListener('pagehide',stop);addEventListener('pageshow',start);
+    addEventListener('pagehide',()=>{clearTimeout(resizeTimer);stop();});
+    addEventListener('pageshow',()=>{resize();start();});
     reduceMotion.addEventListener('change',updateWeather);
     resize();updateWeather();updateScene();
 })();

@@ -26,14 +26,15 @@
     let track = Math.max(0, Math.min(tracks.length - 1, Number(read('jianghu-song-track', '0')) || 0));
     volume.value = String(Math.max(0, Math.min(100, Number(read('jianghu-music-volume', '30')) || 0)));
     audio.volume = Number(volume.value) / 100;
-    let request = 0;
+    let request = 0, loading = false, seeking = false;
     function syncPlay() {
         const active = !audio.paused;
-        play.textContent = active ? '歇弦' : '听曲'; play.setAttribute('aria-pressed', String(active));
+        play.textContent = loading ? '取消寻曲' : active ? '歇弦' : '听曲'; play.setAttribute('aria-pressed', String(active || loading));
+        play.setAttribute('aria-busy', String(loading));
         music.classList.toggle('is-playing', active);
     }
     function loadTrack() {
-        request++; audio.pause(); audio.src = tracks[track].url;
+        request++; loading = seeking = false; audio.pause(); audio.src = tracks[track].url;
         trackSelect.selectedIndex = track; save('jianghu-song-track', track);
         source.href = `https://music.163.com/song?id=${new URL(tracks[track].url).searchParams.get('id').replace('.mp3', '')}`;
         seek.value = '0'; seek.disabled = true; timeLabel.textContent = '0:00 / 0:00';
@@ -41,15 +42,16 @@
     }
     async function start() {
         const id = ++request;
+        loading = true; syncPlay();
         status.textContent = `正在寻曲 · ${tracks[track].title}`;
-        try { await audio.play(); if (id === request) { syncPlay(); status.textContent = `正在听 · ${tracks[track].title}`; } }
-        catch (error) { if (id === request && error.name !== 'AbortError') { syncPlay(); status.textContent = '音源暂不可用，可换一曲或打开原站。'; } }
+        try { await audio.play(); if (id === request) { loading = false; syncPlay(); status.textContent = `正在听 · ${tracks[track].title}`; } }
+        catch (error) { if (id === request) { loading = false; syncPlay(); if (error.name !== 'AbortError') status.textContent = '音源暂不可用，可换一曲或打开原站。'; } }
     }
     play.addEventListener('click', () => {
-        if (!audio.paused) { request++; audio.pause(); status.textContent = '曲暂歇，余音留在檐下。'; }
+        if (loading || !audio.paused) { request++; loading = false; audio.pause(); syncPlay(); status.textContent = '曲暂歇，余音留在檐下。'; }
         else start();
     });
-    function changeTrack(index, resume = !audio.paused) {
+    function changeTrack(index, resume = loading || !audio.paused) {
         track = (index + tracks.length) % tracks.length; loadTrack(); if (resume) start();
     }
     trackSelect.addEventListener('change', () => changeTrack(trackSelect.selectedIndex));
@@ -57,18 +59,31 @@
     music.querySelector('#musicNext').addEventListener('click', () => changeTrack(track + 1));
     const formatTime = seconds => { const s = Number.isFinite(seconds) ? Math.floor(seconds) : 0; return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
     function syncTime() {
+        if (!music.open || document.hidden || seeking) return;
         const ready = Number.isFinite(audio.duration) && audio.duration > 0;
         seek.disabled = !ready;
         seek.value = ready ? String(Math.round(audio.currentTime / audio.duration * 1000)) : '0';
         timeLabel.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
     }
+    music.addEventListener('toggle', () => { if (music.open) syncTime(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) syncTime(); });
     audio.addEventListener('timeupdate', syncTime); audio.addEventListener('loadedmetadata', syncTime);
     audio.addEventListener('play', syncPlay); audio.addEventListener('pause', syncPlay);
     audio.addEventListener('ended', () => changeTrack(track + 1, true));
-    audio.addEventListener('error', () => { syncPlay(); status.textContent = '音源暂不可用，可换一曲或打开原站。'; });
-    seek.addEventListener('input', () => { if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(seek.value) / 1000 * audio.duration; });
-    volume.addEventListener('input', () => { audio.volume = Number(volume.value) / 100; save('jianghu-music-volume', volume.value); });
-    window.addEventListener('pagehide', () => { request++; audio.pause(); });
+    audio.addEventListener('error', () => { loading = false; syncPlay(); status.textContent = '音源暂不可用，可换一曲或打开原站。'; });
+    seek.addEventListener('input', () => {
+        seeking = true;
+        timeLabel.textContent = `${formatTime(Number(seek.value) / 1000 * audio.duration)} / ${formatTime(audio.duration)}`;
+    });
+    seek.addEventListener('change', () => {
+        if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(seek.value) / 1000 * audio.duration;
+        seeking = false; syncTime();
+    });
+    seek.addEventListener('pointercancel', () => { seeking = false; syncTime(); });
+    seek.addEventListener('blur', () => { seeking = false; syncTime(); });
+    volume.addEventListener('input', () => { audio.volume = Number(volume.value) / 100; });
+    volume.addEventListener('change', () => save('jianghu-music-volume', volume.value));
+    window.addEventListener('pagehide', () => { request++; loading = false; audio.pause(); save('jianghu-music-volume', volume.value); });
     loadTrack();
 
     // Piles sit on each actual component edge; every silhouette is slightly different.
@@ -192,6 +207,11 @@
         });
         wardrobe.querySelector('[data-reset]').addEventListener('click', () => { reset(); closeWardrobe(); });
         document.addEventListener('pointerdown', event => { if (!snowman.contains(event.target)) closeWardrobe(); });
-        window.addEventListener('resize', () => { place(x, y); persistPosition(); });
+        let petResizeTimer = 0;
+        window.addEventListener('resize', () => {
+            clearTimeout(petResizeTimer);
+            petResizeTimer = setTimeout(() => { place(x, y); }, 140);
+        }, {passive:true});
+        window.addEventListener('pagehide', () => clearTimeout(petResizeTimer));
     }
 })();

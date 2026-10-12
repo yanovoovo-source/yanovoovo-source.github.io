@@ -84,7 +84,7 @@ try {
     await evaluate(`(() => {const pet=document.querySelector('.snowman'),face=document.querySelector('.snowman-nose'),menu=document.querySelector('.pet-wardrobe');if(parseFloat(pet.style.left)<80)throw new Error('Pet drag');if(!menu.hidden)throw new Error('Dragging opens wardrobe');face.click();if(menu.hidden)throw new Error('Wardrobe');const hat=pet.classList.contains('has-bamboo-hat');menu.querySelector('[data-dress="hat"]').click();if(hat===pet.classList.contains('has-bamboo-hat'))throw new Error('Hat toggle');document.body.dataset.weather='clear';if(getComputedStyle(pet).display!=='none')throw new Error('Clear weather pet visibility')})()`);
     await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});
     await call('Emulation.setTouchEmulationEnabled',{enabled:true});
-    await evaluate(`document.body.dataset.weather='snow'`);await pause(50);
+    await evaluate(`document.body.dataset.weather='snow'`);await pause(200);
     const touch=await evaluate(`(() => {const r=document.querySelector('.snowman-nose').getBoundingClientRect();return {x:r.left+40,y:r.top+35,left:parseFloat(document.querySelector('.snowman').style.left)}})()`);
     await call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:touch.x,y:touch.y}]});
     await call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:touch.x+25,y:touch.y-45}]});
@@ -96,8 +96,58 @@ try {
     await call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await pause(30);
     await evaluate(`if(getComputedStyle(document.querySelector('#moodParticles canvas')).display!=='none')throw new Error('Reduced motion')`);
     await call('Emulation.setEmulatedMedia',{features:[]});
+
+    // Player state tests use a controlled media source: no external song requests.
+    const {identifier}=await call('Page.addScriptToEvaluateOnNewDocument',{source:`
+        window.Audio=class extends EventTarget {
+            constructor(){super();this.paused=true;this.duration=240;this._time=0;this.seeks=0;window.__testAudio=this;}
+            get currentTime(){return this._time;}
+            set currentTime(value){this._time=value;this.seeks++;}
+            play(){this.paused=false;return new Promise((resolve,reject)=>{this._resolve=resolve;this._reject=reject;});}
+            pause(){this.paused=true;if(this._reject)this._reject(new DOMException('Cancelled','AbortError'));this._resolve=this._reject=null;this.dispatchEvent(new Event('pause'));}
+            finish(){const resolve=this._resolve;this._resolve=this._reject=null;this.dispatchEvent(new Event('play'));if(resolve)resolve();}
+        };`});
+    await call('Page.navigate',{url:`${origin}/index.html`});
+    let playerReady=false;for(let i=0;i<70;i++){playerReady=await evaluate(`document.readyState==='complete'&&!!window.__testAudio&&document.querySelector('#musicTrack')?.options.length===13`);if(playerReady)break;await pause(100)}
+    if(!playerReady)throw new Error('Controlled player did not initialize');
+    await evaluate(`(async()=>{
+        const audio=window.__testAudio,play=document.querySelector('#musicPlay'),music=document.querySelector('.music-box'),seek=document.querySelector('#musicSeek');
+        if(!audio.paused)throw new Error('Unexpected autoplay');
+        music.open=true;await new Promise(resolve=>setTimeout(resolve,20));
+        play.click();if(play.getAttribute('aria-busy')!=='true')throw new Error('Loading feedback');
+        play.click();await Promise.resolve();if(!audio.paused||play.getAttribute('aria-busy')!=='false')throw new Error('Cancel pending playback');
+        play.click();document.querySelector('#musicNext').click();
+        if(audio.paused||play.getAttribute('aria-busy')!=='true')throw new Error('Switch track while loading');
+        audio.finish();await Promise.resolve();if(play.getAttribute('aria-busy')!=='false'||play.getAttribute('aria-pressed')!=='true')throw new Error('Playback state');
+        audio._time=24;audio.dispatchEvent(new Event('loadedmetadata'));
+        if(seek.disabled||seek.value!=='100')throw new Error('Initial seek position');
+        for(const value of ['300','400','500']){seek.value=value;seek.dispatchEvent(new Event('input'));}
+        audio.dispatchEvent(new Event('timeupdate'));
+        if(audio.seeks!==0||seek.value!=='500'||!document.querySelector('#musicTime').textContent.startsWith('2:00'))throw new Error('Scrubbing preview interrupted');
+        seek.dispatchEvent(new Event('change'));
+        if(audio.seeks!==1||audio.currentTime!==120)throw new Error('Seek must commit once');
+        music.open=false;audio._time=180;audio.dispatchEvent(new Event('timeupdate'));
+        if(seek.value!=='500')throw new Error('Closed player keeps rendering');
+        music.open=true;await new Promise(resolve=>setTimeout(resolve,20));
+        if(seek.value!=='750')throw new Error('Reopened player out of sync');
+        const volume=document.querySelector('#musicVolume');volume.value='47';volume.dispatchEvent(new Event('input'));
+        if(audio.volume!==.47)throw new Error('Volume preview');
+        volume.dispatchEvent(new Event('change'));if(localStorage.getItem('jianghu-music-volume')!=='47')throw new Error('Volume persistence');
+        play.click();if(!audio.paused)throw new Error('Pause playback');
+    })()`);
+    await call('Page.removeScriptToEvaluateOnNewDocument',{identifier});
+    await evaluate(`window.__canvasWrites=0;window.__canvasObserver=new MutationObserver(records=>window.__canvasWrites+=records.length);window.__canvasObserver.observe(document.querySelector('#moodParticles canvas'),{attributes:true,attributeFilter:['width','height']});for(let i=0;i<20;i++)dispatchEvent(new Event('resize'))`);
+    await pause(200);
+    if(await evaluate('window.__canvasWrites')!==0)throw new Error('Unchanged viewport reallocates canvas');
+    for(const height of [800,700,600])await call('Emulation.setDeviceMetricsOverride',{width:375,height,deviceScaleFactor:1,mobile:true});
+    await pause(220);
+    await evaluate(`(() => {const c=document.querySelector('#moodParticles canvas');if(window.__canvasWrites!==2||Math.abs(c.height/c.width-innerHeight/innerWidth)>.005)throw new Error('Resize not coalesced');if(document.documentElement.scrollWidth>innerWidth)throw new Error('Resize overflow');window.__canvasObserver.disconnect()})()`);
+    await call('Emulation.setDeviceMetricsOverride',{width:800,height:450,deviceScaleFactor:1,mobile:true});await pause(220);
+    await evaluate(`document.body.dataset.weather='snow';const box=document.querySelector('.snowman').getBoundingClientRect();if(box.right>innerWidth||box.bottom>innerHeight)throw new Error('Landscape pet bounds')`);
+    await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});await pause(220);
     if(errors.length)throw new Error(errors.join('\n'));
     console.log('PASS playlist / composited mouse and touch drag / wardrobe / weather / background switching / reduced motion');
+    console.log('PASS loading cancellation / single-commit scrubbing / closed-player idle / volume / coalesced viewport resize / landscape pet');
     console.log('Screenshots: '+evidence);
 } finally {
     if(ws)ws.close();chrome.kill();await new Promise(resolve=>server.close(resolve));

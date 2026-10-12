@@ -30,3 +30,17 @@ backdrop blurs; transform-based snow accumulation and pet dragging; animation an
 snow-growth work suspended when the document is hidden. Regression checks include
 real mouse and touch input, rapid background switching, reduced-motion support,
 music controls, and mobile overflow.
+
+## Follow-up interaction checks
+
+Viewport changes are debounced for 140 ms, unchanged canvas dimensions are ignored,
+and existing particles are retained rather than randomly reseeded. Pet resizing
+uses the same settling window without writing storage during every resize event.
+Music scrubbing previews locally and seeks once on release; time updates do not
+overwrite the preview or render into a closed player. Pending playback can be
+cancelled, and volume persists on commit instead of every drag event.
+
+The browser regression now also checks resize bursts, portrait/landscape pet
+bounds, loading cancellation, track changes during loading, one seek per scrub,
+and volume persistence. Player state tests use a controlled Audio double, not
+external NetEase playback, so they do not verify remote song availability.
