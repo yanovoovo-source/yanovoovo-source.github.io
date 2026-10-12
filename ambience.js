@@ -14,7 +14,9 @@
         <p class="music-time" id="musicTime">0:00 / 0:00</p>
         <label class="music-volume">音量 <input id="musicVolume" type="range" min="0" max="100" value="30"></label>
         <p id="musicStatus" role="status">轻叩听曲，声起此间。</p></div>`;
-    document.body.append(music);
+    (document.querySelector('.scene-controls') || document.body).append(music);
+    document.addEventListener('pointerdown', event => { if (!music.contains(event.target)) music.open = false; });
+    music.addEventListener('keydown', event => { if (event.key === 'Escape') { music.open = false; music.querySelector('summary').focus(); } });
     const trackSelect = music.querySelector('#musicTrack'), play = music.querySelector('#musicPlay');
     const volume = music.querySelector('#musicVolume'), status = music.querySelector('#musicStatus');
     const seek = music.querySelector('#musicSeek'), timeLabel = music.querySelector('#musicTime');
@@ -118,18 +120,21 @@
         });
         syncDress();
         let x = 0, y = 0, dragging = null, suppressClick = false;
+        const petHeightLimit = () => Math.max(30, innerHeight - (innerWidth <= 760 ? 185 : 115));
         function place(left, top) {
             x = Math.max(8, Math.min(Math.max(8, innerWidth - 96), left));
-            y = Math.max(30, Math.min(Math.max(30, innerHeight - 115), top));
+            y = Math.max(30, Math.min(petHeightLimit(), top));
             Object.assign(snowman.style, {left:`${x}px`,top:`${y}px`,right:'auto',bottom:'auto'});
-            snowman.classList.toggle('pet-menu-left', x > innerWidth - 260);
+            const menuLeft = x + 248 <= innerWidth - 8 ? 96 : x >= 168 ? -160 : Math.max(8 - x, innerWidth - x - 160);
+            Object.assign(wardrobe.style, {left:`${menuLeft}px`,right:'auto'});
+            snowman.classList.toggle('pet-menu-left', x > innerWidth - 128);
             snowman.classList.toggle('pet-menu-down', y < 180);
         }
-        function persistPosition() { save('jianghu-pet-position', JSON.stringify({x:x / Math.max(1, innerWidth - 96),y:y / Math.max(1, innerHeight - 115)})); }
-        function reset() { place(Math.max(12, (innerWidth - 1140) / 2 - 31), innerHeight - 130); persistPosition(); }
+        function persistPosition() { save('jianghu-pet-position', JSON.stringify({x:x / Math.max(1, innerWidth - 96),y:y / petHeightLimit()})); }
+        function reset() { place(Math.max(12, (innerWidth - 1140) / 2 - 31), petHeightLimit() - 15); persistPosition(); }
         try {
             const position = JSON.parse(read('jianghu-pet-position', 'null'));
-            if (position && Number.isFinite(position.x) && Number.isFinite(position.y)) place(position.x * (innerWidth - 96), position.y * (innerHeight - 115));
+            if (position && Number.isFinite(position.x) && Number.isFinite(position.y)) place(position.x * (innerWidth - 96), position.y * petHeightLimit());
             else reset();
         } catch { reset(); }
         function closeWardrobe() { wardrobe.hidden = true; nose.setAttribute('aria-expanded', 'false'); }

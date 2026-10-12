@@ -6,11 +6,12 @@
     <meta name="description" content="无情道魁首的私人数字居所：收录图片、文字、读书札记、今日所学和会说话的小机关。">
     <meta name="theme-color" content="#171416">
     <title>无情道魁首</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="ambience.css">
-    <script src="script.js" defer></script>
-    <script src="playlist.js" defer></script>
-    <script src="ambience.js" defer></script>
+    <link rel="stylesheet" href="style.css?v=20261012-01">
+    <link rel="stylesheet" href="ambience.css?v=20261012-01">
+    <link rel="stylesheet" href="polish.css?v=20261012-01">
+    <script src="script.js?v=20261012-01" defer></script>
+    <script src="playlist.js?v=20261012-01" defer></script>
+    <script src="ambience.js?v=20261012-01" defer></script>
 </head>
 <body data-theme="scene-01" data-scene="scene-01" data-weather="clear">
     <div class="world" aria-hidden="true">
@@ -48,31 +49,21 @@
 
     <header class="hero">
         <div class="hero-copy">
-            <p class="hero-mark">私人数字居所 · 竹影山门</p>
+            <p class="hero-mark">私人数字居所 <span>·</span> 一隅江湖</p>
             <h1>无情道<br><em>魁首</em></h1>
             <p class="hero-subtitle">执一柄剑，行一程风，留几页自己的江湖。</p>
-            <div class="sword-line" aria-hidden="true"><span></span></div>
             <div class="hero-actions">
-                <button class="seal entry-seal" id="enterButton" type="button" aria-label="进入我的江湖">
-                    <span>入</span><small>江湖</small>
-                </button>
-                <p class="scroll-hint">轻叩此印<br>往下是我的一方天地</p>
+                <button class="entry-link" id="enterButton" type="button">翻开山门档案 <span aria-hidden="true">↘</span></button>
+                <p class="scroll-hint">札记、藏书，还有一点闲趣</p>
             </div>
             <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
         </div>
-        <div class="hero-scene" aria-hidden="true">
-            <div class="wuxia-stilllife">
-                <span class="still-bamboo still-bamboo-one"></span>
-                <span class="still-bamboo still-bamboo-two"></span>
-                <span class="still-hat"></span>
-                <span class="still-sword"></span>
-            </div>
-            <div class="scene-plate">
+        <div class="scene-preview" aria-hidden="true">
+            <div class="scene-preview-art"></div>
+            <div class="scene-preview-caption">
                 <span class="scene-index" id="sceneIndexLabel">SCENE / 01</span>
                 <strong id="sceneMood">花灯水巷</strong>
                 <p id="sceneLine">楼影沉在水里，花枝从檐角探出来。花瓣和金屑偶尔掠过屏面。</p>
-                <div class="scene-rule"></div>
-                <span class="scene-caption">CURRENT ATMOSPHERE</span>
             </div>
         </div>
     </header>
@@ -93,15 +84,15 @@
             </nav>
 
         <section class="intro reveal" aria-labelledby="intro-title">
-            <p class="section-number">卷一 · 自序</p>
-            <h2 id="intro-title">竹影札记</h2>
+            <div class="intro-heading"><p class="section-number">卷一 · 自序</p>
+            <h2 id="intro-title">竹影札记</h2></div>
             <p class="lead">这里收留我路过人间时捡到的东西：好看的画面，突然想记下的句子，读过的书，今天新学会的事，以及一些会说话的小机关。</p>
         </section>
 
         <section class="stats-strip reveal" aria-label="江湖档案索引">
-            <div><strong>07</strong><span>已收札记</span></div>
-            <div><strong>12</strong><span>枕边藏书</span></div>
-            <div><strong>03</strong><span>在做机关</span></div>
+            <div><strong>04</strong><span>已收札记</span></div>
+            <div><strong>03</strong><span>枕边藏书</span></div>
+            <div><strong>13</strong><span>随行曲目</span></div>
             <div><strong>2026</strong><span>开始筑站</span></div>
         </section>
 
@@ -114,11 +105,11 @@
             <article class="paper-card reveal">
                 <p class="card-kicker">藏书阁</p><h3>枕边有书</h3>
                 <p>正在读的、读完舍不得合上的、只记住一句话的，都等我慢慢收进来。</p>
-                <span class="card-status">待续 · 不定期添卷</span>
+                <a class="card-status card-link" href="library.html">去藏书阁看看 <span aria-hidden="true">↗</span></a>
             </article>
             <article class="paper-card image-card reveal">
-                <div class="image-window" aria-label="等待收录的图片位置"><span class="sun"></span><span class="ridge"></span></div>
-                <div><p class="card-kicker">浮光掠影</p><h3>今日所见</h3><p>先留一扇窗。以后可以放画、照片，或任何让我停下来多看一眼的东西。</p></div>
+                <a class="image-window" href="gallery.html" aria-label="打开浮光掠影画廊"></a>
+                <div><p class="card-kicker">浮光掠影</p><h3>今日所见</h3><p>从一座城的灯火，到一枝探出檐角的花。把让我停下来多看一眼的画面，慢慢收进来。</p><a class="card-link" href="gallery.html">推窗看画 <span aria-hidden="true">↗</span></a></div>
             </article>
             <article class="paper-card learn-card reveal">
                 <p class="card-kicker">今日习得</p><h3>把念头变成小东西</h3>
@@ -147,7 +138,7 @@
         <section class="future reveal" aria-labelledby="future-title">
             <p class="section-number">未完待续</p><h2 id="future-title">此间仍在生长</h2>
             <p>下一次回来，也许添一页书单，也许挂一幅新画，也许再做一个能陪我聊天的 AI 小机关。</p>
-            <div class="future-links"><span>浮光</span><i>·</i><span>札记</span><i>·</i><span>藏书</span><i>·</i><span>机关</span></div>
+            <div class="future-links"><a href="gallery.html">浮光</a><i>·</i><a href="journal.html">札记</a><i>·</i><a href="library.html">藏书</a><i>·</i><a href="mechanism.html">机关</a></div>
         </section>
         </div>
     </main>
