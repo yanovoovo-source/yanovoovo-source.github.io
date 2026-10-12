@@ -58,7 +58,7 @@ try {
             const controls=[...document.querySelector('.scene-controls').children].map(el=>el.getBoundingClientRect());
             const music=document.querySelector('.music-box');music.open=true;const panel=document.querySelector('.music-content').getBoundingClientRect();music.open=false;
             document.body.dataset.weather='snow';const pet=document.querySelector('.snowman'),face=document.querySelector('.snowman-nose');face.click();const wardrobe=document.querySelector('.pet-wardrobe').getBoundingClientRect(),petBox=pet.getBoundingClientRect();face.click();document.body.dataset.weather='clear';
-            return {overflow:document.documentElement.scrollWidth>innerWidth,toolbar:controls.every((a,i)=>controls.every((b,j)=>i===j||a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top)),music:panel.left>=0&&panel.right<=innerWidth+1&&panel.top>=0&&panel.bottom<=innerHeight+1,wardrobe:wardrobe.left>=0&&wardrobe.right<=innerWidth+1,pet:innerWidth>760||petBox.bottom<=document.querySelector('.scene-controls').getBoundingClientRect().top,signature:!!document.querySelector('.signature-mark'),current:document.querySelectorAll('[aria-current="page"]').length===1,canvas:document.querySelectorAll('#moodParticles canvas').length===1&&document.querySelectorAll('#moodParticles span').length===0};
+            return {overflow:document.documentElement.scrollWidth>innerWidth,toolbar:controls.every((a,i)=>controls.every((b,j)=>i===j||a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top)),music:panel.left>=0&&panel.right<=innerWidth+1&&panel.top>=0&&panel.bottom<=innerHeight+1,wardrobe:wardrobe.left>=0&&wardrobe.right<=innerWidth+1&&wardrobe.top>=0&&wardrobe.bottom<=innerHeight+1,pet:innerWidth>760||petBox.bottom<=document.querySelector('.scene-controls').getBoundingClientRect().top,signature:!!document.querySelector('.signature-mark'),current:document.querySelectorAll('[aria-current="page"]').length===1,canvas:document.querySelectorAll('#moodParticles canvas').length===1&&document.querySelectorAll('#moodParticles span').length===0};
         })()`);
         if(checks.overflow||Object.entries(checks).some(([key,value])=>key!=='overflow'&&!value))throw new Error(`${width}px ${page}: ${JSON.stringify(checks)}`);
         console.log(`PASS ${width}px ${page}`);
@@ -145,9 +145,81 @@ try {
     await call('Emulation.setDeviceMetricsOverride',{width:800,height:450,deviceScaleFactor:1,mobile:true});await pause(220);
     await evaluate(`document.body.dataset.weather='snow';const box=document.querySelector('.snowman').getBoundingClientRect();if(box.right>innerWidth||box.bottom>innerHeight)throw new Error('Landscape pet bounds')`);
     await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});await pause(220);
+
+    // Winter companion: the enlarged wardrobe must fit beside every screen corner.
+    for(const [width,height] of [[320,740],[375,900],[800,450]]){
+        await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:true});await pause(220);
+        await evaluate(`(() => {
+            document.body.dataset.weather='snow';
+            const pet=document.querySelector('.snowman'),face=document.querySelector('.snowman-nose'),menu=document.querySelector('.pet-wardrobe-panel');
+            if(!menu||document.querySelectorAll('.pet-sculpture svg').length!==1)throw new Error('Snow sculpture or wardrobe missing');
+            for(const corner of ['bottom-left','bottom-right','top-left','top-right']){
+                if(!menu.hidden)face.click();
+                face.dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true}));
+                if(corner.endsWith('right'))for(let i=0;i<Math.ceil(innerWidth/25)+2;i++)face.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',shiftKey:true,bubbles:true}));
+                if(corner.startsWith('top'))for(let i=0;i<Math.ceil(innerHeight/25)+2;i++)face.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowUp',shiftKey:true,bubbles:true}));
+                face.click();
+                const r=menu.getBoundingClientRect();
+                if(menu.hidden||face.getAttribute('aria-expanded')!=='true'||r.width===0||r.left<0||r.top<0||r.right>innerWidth+1||r.bottom>innerHeight+1)throw new Error('Wardrobe bounds '+innerWidth+'x'+innerHeight+' '+corner+' '+JSON.stringify({left:r.left,top:r.top,right:r.right,bottom:r.bottom}));
+                face.click();
+            }
+        })()`);
+        console.log('PASS snow wardrobe four corners '+width+'x'+height);
+    }
+    await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});await pause(220);
+    const rememberedOutfit=await evaluate(`(() => {
+        const pet=document.querySelector('.snowman'),face=document.querySelector('.snowman-nose'),menu=document.querySelector('.pet-wardrobe-panel');
+        face.dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true}));if(menu.hidden)face.click();
+        const ids=['vermilion','moon','swordsman','traveler','winter','bare'],buttons=[...menu.querySelectorAll('[data-outfit]')];
+        if(buttons.length!==ids.length||ids.some(id=>!buttons.some(button=>button.dataset.outfit===id)))throw new Error('Six outfit choices');
+        for(const id of ids){
+            const selected=menu.querySelector('[data-outfit="'+id+'"]');selected.click();
+            const pressed=buttons.filter(button=>button.getAttribute('aria-pressed')==='true');
+            if(pet.dataset.outfit!==id||localStorage.getItem('jianghu-pet-outfit')!==id||pressed.length!==1||pressed[0]!==selected)throw new Error('Outfit selection '+id);
+            for(const [key,className] of [['nose','has-nose'],['hat','has-bamboo-hat'],['scarf','has-scarf']]){
+                const toggle=menu.querySelector('[data-dress="'+key+'"]'),before=pet.classList.contains(className);
+                toggle.click();if(pet.classList.contains(className)===before||toggle.getAttribute('aria-pressed')!==String(!before))throw new Error('Outfit accessory '+id+' '+key);
+                toggle.click();if(pet.classList.contains(className)!==before)throw new Error('Accessory restore '+id+' '+key);
+            }
+            const r=menu.getBoundingClientRect();if(r.left<0||r.top<0||r.right>innerWidth+1||r.bottom>innerHeight+1)throw new Error('Outfit changes wardrobe bounds '+id);
+        }
+        menu.querySelector('[data-outfit="winter"]').click();
+        return {outfit:pet.dataset.outfit,nose:pet.classList.contains('has-nose'),hat:pet.classList.contains('has-bamboo-hat'),scarf:pet.classList.contains('has-scarf')};
+    })()`);
+    await call('Page.reload',{ignoreCache:true});
+    let petReady=false;for(let i=0;i<70;i++){petReady=await evaluate(`document.readyState==='complete'&&document.querySelectorAll('.pet-wardrobe button[data-outfit]').length===6`);if(petReady)break;await pause(100)}
+    if(!petReady)throw new Error('Winter companion did not reinitialize');
+    const restoredOutfit=await evaluate(`(() => {const pet=document.querySelector('.snowman');return {outfit:pet.dataset.outfit,nose:pet.classList.contains('has-nose'),hat:pet.classList.contains('has-bamboo-hat'),scarf:pet.classList.contains('has-scarf')}})()`);
+    if(JSON.stringify(restoredOutfit)!==JSON.stringify(rememberedOutfit))throw new Error('Outfit refresh persistence '+JSON.stringify({rememberedOutfit,restoredOutfit}));
+
+    // Separate evidence for the full mobile page, sculpted pet and open wardrobe.
+    await evaluate(`(() => {
+        scrollTo(0,0);document.body.dataset.weather='snow';document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+        const pet=document.querySelector('.snowman'),face=document.querySelector('.snowman-nose'),menu=document.querySelector('.pet-wardrobe-panel');
+        face.dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true}));if(menu.hidden)face.click();
+        menu.querySelector('[data-outfit="vermilion"]').click();
+        for(const [key,className,wanted] of [['nose','has-nose',true],['hat','has-bamboo-hat',false],['scarf','has-scarf',true]])if(pet.classList.contains(className)!==wanted)menu.querySelector('[data-dress="'+key+'"]').click();
+        if(!menu.hidden)face.click();
+    })()`);await pause(450);
+    const mobileSnow=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+    fs.writeFileSync(path.join(evidence,'snow-mobile-375.png'),Buffer.from(mobileSnow.data,'base64'));
+    const petClip=await evaluate(`(() => {const r=document.querySelector('.snowman').getBoundingClientRect(),x=Math.max(0,r.left-16),y=Math.max(0,r.top-18);return {x,y,width:Math.min(innerWidth-x,r.width+32),height:Math.min(innerHeight-y,r.height+36),scale:3}})()`);
+    const petCloseup=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,clip:petClip});
+    fs.writeFileSync(path.join(evidence,'snow-pet-closeup.png'),Buffer.from(petCloseup.data,'base64'));
+    await evaluate(`document.querySelector('.snowman-nose').click()`);await pause(100);
+    const openWardrobe=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+    fs.writeFileSync(path.join(evidence,'snow-wardrobe-375.png'),Buffer.from(openWardrobe.data,'base64'));
+    await evaluate(`(() => {const pet=document.querySelector('.snowman').getBoundingClientRect(),menu=document.querySelector('.pet-wardrobe').getBoundingClientRect();if(menu.left<pet.right&&menu.right>pet.left&&menu.top<pet.bottom&&menu.bottom>pet.top)throw new Error('Default mobile wardrobe hides snow guest')})()`);
+    for(const id of ['vermilion','moon','swordsman','traveler','winter','bare']){
+        await evaluate(`document.querySelector('.pet-wardrobe [data-outfit="${id}"]').click();document.querySelector('.pet-wardrobe').hidden=true`);
+        await pause(35);
+        const outfitShot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,clip:petClip});
+        fs.writeFileSync(path.join(evidence,`snow-outfit-${id}.png`),Buffer.from(outfitShot.data,'base64'));
+    }
     if(errors.length)throw new Error(errors.join('\n'));
     console.log('PASS playlist / composited mouse and touch drag / wardrobe / weather / background switching / reduced motion');
     console.log('PASS loading cancellation / single-commit scrubbing / closed-player idle / volume / coalesced viewport resize / landscape pet');
+    console.log('PASS six winter outfits / accessories in every outfit / reload persistence / phone and landscape wardrobe bounds');
     console.log('Screenshots: '+evidence);
 } finally {
     if(ws)ws.close();chrome.kill();await new Promise(resolve=>server.close(resolve));

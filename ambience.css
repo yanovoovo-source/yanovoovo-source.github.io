@@ -74,3 +74,66 @@ body[data-weather="snow"] .snowman { z-index:4; bottom:22px; opacity:.94; }
     .snow-floor { height:36px; }
 }
 @media(prefers-reduced-motion:reduce) { .music-box.is-playing summary span { animation:none; } .settled-snow,.snow-floor { transition:none; } }
+
+/* Snow guest: softly lit sculpted snow, fabric, straw and quiet winter colours. */
+.snowman.desktop-pet { width:104px; height:132px; background:none; filter:drop-shadow(0 6px 5px #14101b66); --pet-scarf:#934c43; }
+body[data-weather="snow"] .snowman.desktop-pet { opacity:1; }
+.snowman.desktop-pet::before,.snowman.desktop-pet::after,
+.snowman.desktop-pet>.snowman-hat,.snowman.desktop-pet>.snowman-scarf,
+.snowman.desktop-pet>.pet-bamboo-hat,.snowman.desktop-pet>.snowman-nose::after { display:none; }
+.pet-sculpture { width:100%; height:100%; pointer-events:none; transform-origin:50% 85%; transition:transform .18s ease; }
+.pet-sculpture svg { display:block; width:100%; height:100%; overflow:visible; }
+.pet-sculpture .pet-outfit,.pet-sculpture .pet-carrot,.pet-sculpture .pet-accessory-scarf,
+.pet-sculpture .pet-bamboo-accessory,.pet-sculpture .pet-wool-cap { display:none; }
+[data-outfit="moon"] .pet-outfit-moon,[data-outfit="swordsman"] .pet-outfit-swordsman,
+[data-outfit="traveler"] .pet-outfit-traveler,[data-outfit="winter"] .pet-outfit-winter,
+[data-outfit="winter"]:not(.has-bamboo-hat) .pet-wool-cap,
+.has-nose .pet-carrot,.has-scarf .pet-accessory-scarf,.has-bamboo-hat .pet-bamboo-accessory { display:inline; }
+.pet-scarf-main { fill:var(--pet-scarf); }
+.snowman[data-outfit="moon"] { --pet-scarf:#b9a187; }
+.snowman[data-outfit="swordsman"] { --pet-scarf:#87413c; }
+.snowman[data-outfit="traveler"] { --pet-scarf:#615044; }
+.snowman[data-outfit="winter"] { --pet-scarf:#d4c0a2; }
+.pet-eyes { transform-box:fill-box; transform-origin:center; animation:snow-guest-blink 8.4s infinite; }
+@keyframes snow-guest-blink { 0%,43%,46%,100% { transform:scaleY(1); } 44%,45% { transform:scaleY(.12); } }
+.snowman.is-dragging .pet-sculpture { transform:rotate(-4deg) scale(1.025); }
+.desktop-pet .snowman-hint { top:-23px; left:-7px; width:132px; border-color:#9a78684d; background:#201920ed; color:#d8c1b1; font-size:10px; opacity:0; transform:translateY(3px); transition:opacity .18s ease,transform .18s ease; }
+.desktop-pet:hover .snowman-hint,.desktop-pet:focus-within .snowman-hint { opacity:1; transform:none; }
+.desktop-pet.is-dragging .snowman-hint { opacity:0; }
+.pet-wardrobe-panel { width:min(248px,calc(100vw - 32px)); padding:16px; border:1px solid #b08a6c70; background:linear-gradient(150deg,#302329,#19151dfc); box-shadow:0 14px 35px #07050c66,inset 0 1px #e8c6a319; border-radius:7px; overflow:auto; overscroll-behavior:contain; }
+.pet-wardrobe-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding-bottom:12px; border-bottom:1px solid #c8a2822b; }
+.pet-wardrobe-heading p { margin:0 0 3px; font-family:"Songti SC","STSong","SimSun",serif; color:#eed8b8; font-size:15px; letter-spacing:.1em; }
+.pet-wardrobe-heading small { display:block; color:#bca69d; font-size:10px; }
+.pet-wardrobe-panel .pet-wardrobe-close { width:26px; min-height:26px; margin:0; padding:0; flex-shrink:0; border-color:transparent; background:none; color:#bca69d; font-size:20px; text-align:center; line-height:1; }
+.pet-outfit-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin-top:13px; }
+.pet-outfit-grid button { display:flex; align-items:center; gap:8px; min-height:57px; padding:9px 7px; margin:0; border:1px solid #a07a6238; border-radius:4px; background:#f2d1b505; color:#dec9bb; font-size:11px; line-height:1.5; }
+.pet-outfit-grid button small { display:block; margin-top:3px; color:#b49b91; font-size:9px; }
+.pet-outfit-grid button[aria-pressed="true"] { background:#87473c30; border-color:#c49a7199; color:#f3dcbb; box-shadow:inset 0 0 0 1px #f1cb8f0a; }
+.pet-outfit-swatch { position:relative; display:block; flex:0 0 19px; height:25px; border-radius:6px 6px 9px 9px; background:var(--swatch,#b26556); box-shadow:inset -3px -2px 4px #21161d55; }
+.pet-outfit-swatch::before { content:""; position:absolute; top:-1px; left:6px; width:7px; height:5px; border-radius:0 0 6px 6px; background:#d6c6b8; }
+.pet-outfit-swatch::after { content:""; position:absolute; top:9px; left:0; right:0; height:2px; background:#f0dfbd55; }
+.pet-outfit-grid [data-outfit="vermilion"] { --swatch:#b26556; }
+.pet-outfit-grid [data-outfit="moon"] { --swatch:#ded7cd; }
+.pet-outfit-grid [data-outfit="swordsman"] { --swatch:#45404b; }
+.pet-outfit-grid [data-outfit="traveler"] { --swatch:#b69b70; }
+.pet-outfit-grid [data-outfit="winter"] { --swatch:#935c56; }
+.pet-outfit-grid [data-outfit="bare"] { --swatch:#f0ebe3; }
+.pet-wardrobe-panel .pet-accessory-label { margin:15px 0 7px; color:#ad958a; font-size:10px; letter-spacing:.12em; }
+.pet-accessory-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
+.pet-accessory-actions button { margin:0; padding:7px 3px; min-height:34px; font-size:10px; text-align:center; border-color:#a07a6238; background:#f0d4ba08; }
+.pet-wardrobe-panel .pet-reset { display:flex; justify-content:space-between; margin-top:12px; padding:10px 0 0; border:0; border-top:1px solid #c8a2822b; border-radius:0; background:none; color:#bfa292; font-size:10px; }
+.pet-wardrobe-panel .pet-reset span { color:#d1af7b; }
+@media(max-width:760px) {
+    .snowman.desktop-pet { width:96px; height:122px; }
+    .pet-wardrobe-panel { width:min(248px,calc(100vw - 130px)); }
+}
+@media(max-width:359px) {
+    .pet-wardrobe-panel { padding:12px; }
+    .pet-outfit-grid { gap:5px; }
+    .pet-outfit-grid button { gap:5px; padding:8px 4px; font-size:10px; }
+    .pet-outfit-swatch { flex-basis:13px; height:23px; }
+    .pet-outfit-swatch::before { left:3px; }
+    .pet-outfit-grid button small { font-size:8px; }
+    .pet-accessory-actions button { padding:7px 1px; font-size:9px; }
+}
+@media(prefers-reduced-motion:reduce) { .pet-eyes { animation:none; } .pet-sculpture,.desktop-pet .snowman-hint { transition:none; } }

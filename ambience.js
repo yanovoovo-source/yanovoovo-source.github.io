@@ -126,15 +126,37 @@
     if (snowman) {
         snowman.removeAttribute('aria-hidden');
         snowman.classList.add('desktop-pet');
+        const sculpture = document.createElement('div');
+        sculpture.className = 'pet-sculpture'; sculpture.setAttribute('aria-hidden', 'true');
+        sculpture.innerHTML = JIANGHU_SNOWMAN_ART;
+        snowman.prepend(sculpture);
         const nose = document.createElement('button');
         nose.type = 'button'; nose.className = 'snowman-nose';
         nose.setAttribute('aria-label', '拖动雪人；点击打开装扮；方向键移动'); nose.setAttribute('aria-expanded', 'false'); nose.setAttribute('aria-controls', 'petWardrobe');
-        const hint = document.createElement('span'); hint.className = 'snowman-hint'; hint.textContent = '拖我走 · 点我换装';
+        const hint = document.createElement('span'); hint.className = 'snowman-hint'; hint.textContent = '拖动随行 · 点我换装';
         const hat = document.createElement('span'); hat.className = 'pet-bamboo-hat'; hat.setAttribute('aria-hidden', 'true');
-        const wardrobe = document.createElement('div'); wardrobe.id = 'petWardrobe'; wardrobe.className = 'pet-wardrobe'; wardrobe.hidden = true;
-        wardrobe.innerHTML = `<p>雪客 · 行囊</p><button type="button" data-dress="nose">安鼻子</button><button type="button" data-dress="hat">戴斗笠</button><button type="button" data-dress="scarf">系围巾</button><button type="button" data-reset>归位</button>`;
+        const outfits = [
+            {id:'vermilion',name:'朱砂围巾',note:'一抹暖意'},
+            {id:'moon',name:'月白披风',note:'清风拂衣'},
+            {id:'swordsman',name:'玄衣剑客',note:'负剑而行'},
+            {id:'traveler',name:'蓑衣斗笠',note:'风雪归人'},
+            {id:'winter',name:'绒帽冬装',note:'围炉听雪'},
+            {id:'bare',name:'素雪本色',note:'一身清白'}
+        ];
+        let outfit = read('jianghu-pet-outfit', 'vermilion');
+        if (!outfits.some(item => item.id === outfit)) outfit = 'vermilion';
+        const wardrobe = document.createElement('div'); wardrobe.id = 'petWardrobe'; wardrobe.className = 'pet-wardrobe pet-wardrobe-panel'; wardrobe.hidden = true;
+        wardrobe.setAttribute('role', 'group'); wardrobe.setAttribute('aria-label', '雪客衣柜');
+        wardrobe.innerHTML = `<div class="pet-wardrobe-heading"><div><p>雪客 · 行装</p><small>给随行的它，换一身江湖</small></div><button type="button" class="pet-wardrobe-close" aria-label="收起衣柜">×</button></div>
+            <div class="pet-outfit-grid">${outfits.map(item => `<button type="button" data-outfit="${item.id}" aria-pressed="false"><i class="pet-outfit-swatch" aria-hidden="true"></i><span>${item.name}<small>${item.note}</small></span></button>`).join('')}</div>
+            <p class="pet-accessory-label">随身小物</p><div class="pet-accessory-actions"><button type="button" data-dress="nose">安鼻子</button><button type="button" data-dress="hat">戴斗笠</button><button type="button" data-dress="scarf">系围巾</button></div>
+            <button type="button" data-reset class="pet-reset">回到身旁 <span aria-hidden="true">↙</span></button>`;
         snowman.append(hat, nose, hint, wardrobe);
-        const dress = { nose:read('jianghu-pet-nose', 'false') === 'true', hat:read('jianghu-pet-hat', 'false') === 'true', scarf:read('jianghu-pet-scarf', 'true') === 'true' };
+        const dress = { nose:read('jianghu-pet-nose', 'true') === 'true', hat:read('jianghu-pet-hat', String(outfit === 'traveler')) === 'true', scarf:read('jianghu-pet-scarf', String(outfit !== 'bare')) === 'true' };
+        function syncOutfit() {
+            snowman.dataset.outfit = outfit;
+            wardrobe.querySelectorAll('[data-outfit]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.outfit === outfit)));
+        }
         function syncDress() {
             snowman.classList.toggle('has-nose', dress.nose); snowman.classList.toggle('has-bamboo-hat', dress.hat); snowman.classList.toggle('has-scarf', dress.scarf);
             wardrobe.querySelectorAll('[data-dress]').forEach(button => {
@@ -143,32 +165,68 @@
             });
         }
         wardrobe.addEventListener('click', event => {
+            const outfitButton = event.target.closest('button[data-outfit]');
+            if (outfitButton) {
+                outfit = outfitButton.dataset.outfit; save('jianghu-pet-outfit', outfit);
+                dress.hat = outfit === 'traveler'; dress.scarf = outfit !== 'bare';
+                save('jianghu-pet-hat', String(dress.hat)); save('jianghu-pet-scarf', String(dress.scarf));
+                syncOutfit(); syncDress(); positionWardrobe(); return;
+            }
             const button = event.target.closest('[data-dress]'); if (!button) return;
             const key = button.dataset.dress; dress[key] = !dress[key]; save(`jianghu-pet-${key}`, String(dress[key])); syncDress();
         });
-        syncDress();
+        syncOutfit(); syncDress();
         let x = 0, y = 0, dragging = null, suppressClick = false, dragFrame = 0;
-        const petHeightLimit = () => Math.max(30, innerHeight - (innerWidth <= 760 ? 185 : 115));
+        let petWidth = 104, petHeight = 132, petBottom = 16;
+        function measurePet() {
+            const style = getComputedStyle(snowman);
+            petWidth = parseFloat(style.width) || 104; petHeight = parseFloat(style.height) || 132;
+            const dock = document.querySelector('.scene-controls');
+            petBottom = innerWidth <= 760 && dock ? Math.max(16, innerHeight - dock.getBoundingClientRect().top + 14) : 16;
+        }
+        measurePet();
+        const petWidthLimit = () => Math.max(8, innerWidth - petWidth - 8);
+        const petHeightLimit = () => Math.max(30, innerHeight - petHeight - petBottom);
+        function positionWardrobe() {
+            if (wardrobe.hidden) return;
+            wardrobe.style.maxHeight = `${Math.max(120, innerHeight - petBottom - 24)}px`;
+            const menu = wardrobe.getBoundingClientRect(), gap = 10;
+            let left = x + petWidth + gap;
+            if (left + menu.width > innerWidth - 12) left = x - menu.width - gap;
+            left = Math.max(12, Math.min(innerWidth - menu.width - 12, left));
+            let preferredTop = y + petHeight - menu.height;
+            if (left < x + petWidth && left + menu.width > x) {
+                if (y - menu.height - gap >= 12) preferredTop = y - menu.height - gap;
+                else if (y + petHeight + gap + menu.height <= innerHeight - petBottom) preferredTop = y + petHeight + gap;
+            }
+            const top = Math.max(12, Math.min(innerHeight - petBottom - menu.height, preferredTop));
+            Object.assign(wardrobe.style, {left:`${left - x}px`,right:'auto',top:`${top - y}px`,bottom:'auto'});
+        }
         function place(left, top) {
-            x = Math.max(8, Math.min(Math.max(8, innerWidth - 96), left));
+            x = Math.max(8, Math.min(petWidthLimit(), left));
             y = Math.max(30, Math.min(petHeightLimit(), top));
             Object.assign(snowman.style, {left:`${x}px`,top:`${y}px`,right:'auto',bottom:'auto'});
-            const menuLeft = x + 248 <= innerWidth - 8 ? 96 : x >= 168 ? -160 : Math.max(8 - x, innerWidth - x - 160);
-            Object.assign(wardrobe.style, {left:`${menuLeft}px`,right:'auto'});
             snowman.classList.toggle('pet-menu-left', x > innerWidth - 128);
             snowman.classList.toggle('pet-menu-down', y < 180);
+            positionWardrobe();
         }
-        function persistPosition() { save('jianghu-pet-position', JSON.stringify({x:x / Math.max(1, innerWidth - 96),y:y / petHeightLimit()})); }
+        function persistPosition() { save('jianghu-pet-position', JSON.stringify({x:x / petWidthLimit(),y:y / petHeightLimit()})); }
         function reset() { place(Math.max(12, (innerWidth - 1140) / 2 - 31), petHeightLimit() - 15); persistPosition(); }
         try {
             const position = JSON.parse(read('jianghu-pet-position', 'null'));
-            if (position && Number.isFinite(position.x) && Number.isFinite(position.y)) place(position.x * (innerWidth - 96), position.y * petHeightLimit());
+            if (position && Number.isFinite(position.x) && Number.isFinite(position.y)) place(position.x * petWidthLimit(), position.y * petHeightLimit());
             else reset();
         } catch { reset(); }
         function closeWardrobe() { wardrobe.hidden = true; nose.setAttribute('aria-expanded', 'false'); }
+        new MutationObserver(() => {
+            if (document.body.dataset.weather !== 'snow') {
+                if (snowman.contains(document.activeElement)) document.querySelector('#weatherSwitch')?.focus({preventScroll:true});
+                closeWardrobe();
+            }
+        }).observe(document.body, {attributes:true,attributeFilter:['data-weather']});
         nose.addEventListener('pointerdown', event => {
             if (event.button !== 0) return;
-            suppressClick = false; dragging = {id:event.pointerId,x:event.clientX,y:event.clientY,left:x,top:y,moved:false};
+            measurePet(); suppressClick = false; dragging = {id:event.pointerId,x:event.clientX,y:event.clientY,left:x,top:y,moved:false};
             nose.setPointerCapture(event.pointerId);
         });
         nose.addEventListener('pointermove', event => {
@@ -176,7 +234,7 @@
             const dx = event.clientX - dragging.x, dy = event.clientY - dragging.y;
             if (!dragging.moved && Math.hypot(dx, dy) < 5) return;
             if (!dragging.moved) { dragging.moved = true; closeWardrobe(); snowman.classList.add('is-dragging'); }
-            dragging.targetX = Math.max(8, Math.min(Math.max(8, innerWidth - 96), dragging.left + dx));
+            dragging.targetX = Math.max(8, Math.min(petWidthLimit(), dragging.left + dx));
             dragging.targetY = Math.max(30, Math.min(petHeightLimit(), dragging.top + dy));
             if (!dragFrame) dragFrame = requestAnimationFrame(() => {
                 dragFrame = 0; if (!dragging) return;
@@ -197,6 +255,7 @@
         nose.addEventListener('click', () => {
             if (suppressClick) { suppressClick = false; return; }
             wardrobe.hidden = !wardrobe.hidden; nose.setAttribute('aria-expanded', String(!wardrobe.hidden));
+            if (!wardrobe.hidden) positionWardrobe();
         });
         nose.addEventListener('keydown', event => {
             const distance = event.shiftKey ? 25 : 10;
@@ -206,11 +265,13 @@
             if (event.key === 'Home') { event.preventDefault(); reset(); }
         });
         wardrobe.querySelector('[data-reset]').addEventListener('click', () => { reset(); closeWardrobe(); });
+        wardrobe.querySelector('.pet-wardrobe-close').addEventListener('click', () => { closeWardrobe(); nose.focus({preventScroll:true}); });
+        wardrobe.addEventListener('keydown', event => { if (event.key === 'Escape') { closeWardrobe(); nose.focus({preventScroll:true}); } });
         document.addEventListener('pointerdown', event => { if (!snowman.contains(event.target)) closeWardrobe(); });
         let petResizeTimer = 0;
         window.addEventListener('resize', () => {
             clearTimeout(petResizeTimer);
-            petResizeTimer = setTimeout(() => { place(x, y); }, 140);
+            petResizeTimer = setTimeout(() => { measurePet(); place(x, y); }, 140);
         }, {passive:true});
         window.addEventListener('pagehide', () => clearTimeout(petResizeTimer));
     }
