@@ -49,7 +49,7 @@ const scrollBehavior=()=>window.matchMedia('(prefers-reduced-motion:reduce)').ma
 if(enterButton&&jianghu)enterButton.addEventListener("click",()=>{jianghu.focus({preventScroll:true});jianghu.scrollIntoView({behavior:scrollBehavior(),block:"start"})});
 if(fortuneButton&&fortuneText)fortuneButton.addEventListener("click",()=>{const choices=fortunes.filter(f=>f!==fortuneText.textContent);fortuneText.textContent=choices[Math.floor(Math.random()*choices.length)]});
 if(backToTop)backToTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:scrollBehavior()}));
-if(todayLabel){const now=new Date(),formatter=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"long",day:"numeric"});todayLabel.textContent=formatter.format(now);todayLabel.dateTime=now.toISOString().slice(0,10);}
+if(todayLabel){const now=new Date(),formatter=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"long",day:"numeric"});todayLabel.textContent=formatter.format(now);todayLabel.dateTime=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');}
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target)}}),{threshold:.12});
 document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
 document.querySelectorAll('.site-nav a.active').forEach(link=>link.setAttribute('aria-current','page'));

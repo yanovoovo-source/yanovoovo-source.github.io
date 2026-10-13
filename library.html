@@ -8,11 +8,15 @@
     <link rel="stylesheet" href="style.css?v=20261012-02">
     <link rel="stylesheet" href="ambience.css?v=20261012-04">
     <link rel="stylesheet" href="polish.css?v=20261012-03">
-    <script src="script.js?v=20261012-02" defer></script>
+    <link rel="stylesheet" href="refinement.css?v=20261013-01">
+    <link rel="stylesheet" href="entrance.css?v=20261013-01">
+    <script src="script.js?v=20261013-01" defer></script>
     <script src="weather.js?v=20261012-03" defer></script>
     <script src="playlist.js?v=20261012-02" defer></script>
     <script src="snowman-art.js?v=20261012-04" defer></script>
     <script src="ambience.js?v=20261012-04" defer></script>
+    <script src="enhance.js?v=20261013-01" defer></script>
+    <script src="entrance.js?v=20261013-01" defer></script>
 </head>
 <body class="inner-page" data-theme="scene-01" data-scene="scene-01" data-weather="clear">
 <div class="world" aria-hidden="true"><div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div><div class="mist mist-two"></div><div class="snow-crown"></div><div class="snow-ground"></div></div>
@@ -33,10 +37,25 @@
                 <a href="index.html">山门总览</a><a href="journal.html">江湖札记</a><a class="active" href="library.html">藏书阁</a><a href="gallery.html">浮光掠影</a><a href="mechanism.html">机关匣</a>
             </nav>
             <section class="library-intro"><p class="section-number">READING LOG / 03</p><h2>慢慢读，不急着合卷</h2><p>这里先放下几本虚位以待的书。等真正读过以后，再补上属于它们的句子。</p></section>
+            <div class="shelf-filters" role="group" aria-label="按阅读状态筛选">
+                <button type="button" data-reading-filter="all" aria-pressed="true">全部藏书 <span>03</span></button>
+                <button type="button" data-reading-filter="reading" aria-pressed="false">在读</button>
+                <button type="button" data-reading-filter="unread" aria-pressed="false">待读</button>
+                <button type="button" data-reading-filter="finished" aria-pressed="false">读完</button>
+            </div>
             <section class="shelf-grid" aria-label="藏书列表">
-                <article class="book-card"><div class="book-spine">一</div><h3>山中札</h3><p>关于独处、行走和把时间还给自己的小册子。</p><div class="book-meta"><span>在读</span><span>42%</span></div><div class="book-progress"><i style="width:42%"></i></div></article>
-                <article class="book-card"><div class="book-spine">二</div><h3>风物志</h3><p>记一些风、树影、旧城和偶尔遇见的人。</p><div class="book-meta"><span>待读</span><span>—</span></div><div class="book-progress"><i style="width:0%"></i></div></article>
-                <article class="book-card"><div class="book-spine">三</div><h3>造物小史</h3><p>从手工、代码到一枚小小的网页机关。</p><div class="book-meta"><span>读完</span><span>100%</span></div><div class="book-progress"><i style="width:100%"></i></div></article>
+                <article class="book-card" data-reading="reading">
+                    <div class="book-cover" aria-hidden="true"><span class="book-cover-series">山居文库 / 01</span><span class="book-cover-title">山中札</span><span class="book-cover-subtitle">独处 · 行走 · 时间</span><span class="book-cover-volume">一</span></div>
+                    <h3>山中札</h3><p>关于独处、行走和把时间还给自己的小册子。</p><div class="book-meta"><span>在读</span><span>42%</span></div><div class="book-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="42" aria-label="山中札阅读进度"><i style="width:42%"></i></div>
+                </article>
+                <article class="book-card" data-reading="unread">
+                    <div class="book-cover" aria-hidden="true"><span class="book-cover-series">山居文库 / 02</span><span class="book-cover-title">风物志</span><span class="book-cover-subtitle">风 · 树影 · 旧城</span><span class="book-cover-volume">二</span></div>
+                    <h3>风物志</h3><p>记一些风、树影、旧城和偶尔遇见的人。</p><div class="book-meta"><span>待读</span><span>—</span></div><div class="book-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="风物志阅读进度"><i style="width:0%"></i></div>
+                </article>
+                <article class="book-card" data-reading="finished">
+                    <div class="book-cover" aria-hidden="true"><span class="book-cover-series">山居文库 / 03</span><span class="book-cover-title">造物小史</span><span class="book-cover-subtitle">手工 · 代码 · 机关</span><span class="book-cover-volume">三</span></div>
+                    <h3>造物小史</h3><p>从手工、代码到一枚小小的网页机关。</p><div class="book-meta"><span>读完</span><span>100%</span></div><div class="book-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="造物小史阅读进度"><i style="width:100%"></i></div>
+                </article>
             </section>
             <section class="shelf-note"><article><h3>最近记下的一句</h3><p>“先把手边这一页读完，远方自然会有下一页。”</p></article><article><h3>下一次想找</h3><p>一本适合雨天、茶水和很长下午的书。</p></article></section>
         </div>

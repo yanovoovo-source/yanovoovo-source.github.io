@@ -74,6 +74,101 @@ try {
             await pause(450);const shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});fs.writeFileSync(path.join(evidence,`home-${width}.png`),Buffer.from(shot.data,'base64'));
         }
     }
+    // New component interactions are independent from the media and pet checks below.
+    async function checkRefinedComponents(){
+        const ready=async(condition,label)=>{
+            for(let i=0;i<70;i++){if(await evaluate(condition))return;await pause(50)}
+            throw new Error(label+' did not initialize');
+        };
+        const visit=async(page)=>{
+            await call('Page.navigate',{url:`${origin}/${page}`});
+            await ready(`document.readyState==='complete'&&document.querySelector('#musicTrack')?.options.length===13`,page);
+            await evaluate(`scrollTo(0,0);document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'))`);
+        };
+        const screenshot=async(name)=>{
+            const shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+            fs.writeFileSync(path.join(evidence,name),Buffer.from(shot.data,'base64'));
+        };
+        const escape=()=>call('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});
+        await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});
+        await visit('index.html');
+        await ready(`!!document.querySelector('[data-replay-entrance]')&&document.querySelectorAll('.scene-choice[data-scene-choice]').length===3`,'Home scene controls');
+        await evaluate(`document.body.dataset.weather='clear';document.querySelector('[data-replay-entrance]').click()`);
+        await ready(`!!document.querySelector('.jianghu-entrance')`,'Entrance replay');
+        await evaluate(`(() => {const intro=document.querySelector('.jianghu-entrance');if(getComputedStyle(intro).pointerEvents!=='none')throw new Error('Entrance blocks page interaction')})()`);
+        await screenshot('entrance-mobile-375.png');
+        await escape();await pause(50);
+        if(await evaluate(`!!document.querySelector('.jianghu-entrance')`))throw new Error('Escape does not remove entrance');
+        await evaluate(`document.querySelector('[data-replay-entrance]').click()`);await pause(1300);
+        if(await evaluate(`!!document.querySelector('.jianghu-entrance')`))throw new Error('Entrance does not finish within 1.2 seconds');
+        await call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+        await evaluate(`document.querySelector('[data-replay-entrance]').click()`);await pause(50);
+        if(await evaluate(`!!document.querySelector('.jianghu-entrance')`))throw new Error('Reduced motion entrance still appears');
+        await call('Emulation.setEmulatedMedia',{features:[]});
+        await evaluate(`(() => {
+            const choices=[...document.querySelectorAll('.scene-choice[data-scene-choice]')];
+            for(const id of ['scene-01','scene-02','scene-03']){
+                const selected=choices.find(button=>button.dataset.sceneChoice===id);if(!selected)throw new Error('Missing scene choice '+id);
+                selected.click();const pressed=choices.filter(button=>button.getAttribute('aria-pressed')==='true');
+                if(document.body.dataset.scene!==id||pressed.length!==1||pressed[0]!==selected)throw new Error('Home scene choice '+id);
+            }
+            choices[0].click();
+        })()`);await pause(650);
+        await screenshot('refined-home-mobile-375.png');
+        console.log('PASS entrance replay / non-blocking overlay / automatic finish / Escape / reduced motion / three scene choices');
+
+        await visit('library.html');
+        await ready(`document.querySelectorAll('.shelf-filters button[data-reading-filter]').length===4&&document.querySelectorAll('.book-card[data-reading]').length===3`,'Reading filters');
+        await evaluate(`(() => {
+            const buttons=[...document.querySelectorAll('.shelf-filters button[data-reading-filter]')],books=[...document.querySelectorAll('.book-card[data-reading]')];
+            for(const filter of ['reading','unread','finished','all']){
+                const selected=buttons.find(button=>button.dataset.readingFilter===filter);if(!selected)throw new Error('Missing reading filter '+filter);
+                selected.click();const pressed=buttons.filter(button=>button.getAttribute('aria-pressed')==='true');
+                if(pressed.length!==1||pressed[0]!==selected)throw new Error('Reading filter pressed state '+filter);
+                if(books.some(book=>book.hidden!==(filter!=='all'&&book.dataset.reading!==filter)))throw new Error('Reading filter visibility '+filter);
+                if(filter!=='all'&&books.filter(book=>!book.hidden).length!==1)throw new Error('Reading filter count '+filter);
+            }
+            if(books.some(book=>book.hidden)||document.documentElement.scrollWidth>innerWidth)throw new Error('Reset reading filters or library overflow');
+        })()`);await pause(200);
+        await screenshot('refined-library-mobile-375.png');
+        console.log('PASS reading / unread / finished filters / all reset / unique selected state');
+
+        for(const width of [375,1440]){
+            await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<761});
+            await visit('gallery.html');
+            await ready(`document.querySelectorAll('.gallery-tile').length===3&&!!document.querySelector('dialog.art-lightbox')`,'Art viewer');
+            await evaluate(`(() => {
+                const tile=document.querySelector('.gallery-tile');window.__artOriginalHref=tile.href;tile.focus();tile.click();
+            })()`);
+            await ready(`document.querySelector('dialog.art-lightbox')?.open&&document.querySelector('#artViewerImage')?.complete&&document.querySelector('#artViewerImage')?.naturalWidth>0`,'Opened art viewer');
+            await evaluate(`(() => {
+                const dialog=document.querySelector('dialog.art-lightbox'),image=document.querySelector('#artViewerImage'),link=dialog.querySelector('.art-viewer-original'),r=dialog.getBoundingClientRect();
+                if(image.src!==window.__artOriginalHref||!link||link.href!==image.src||link.target!=='_blank')throw new Error('Original art link or first image');
+                if(r.left<0||r.top<0||r.right>innerWidth+1||r.bottom>innerHeight+1||document.documentElement.scrollWidth>innerWidth)throw new Error('Art viewer viewport bounds');
+                window.__artFirstSrc=image.src;dialog.querySelector('[data-art-next]').click();
+                if(image.src===window.__artFirstSrc||link.href!==image.src)throw new Error('Art next image');
+                dialog.querySelector('[data-art-previous]').click();if(image.src!==window.__artFirstSrc)throw new Error('Art previous image');
+                for(const index of [2,1,0]){
+                    const choice=dialog.querySelector('[data-art-index="'+index+'"]');if(!choice)throw new Error('Missing art index '+index);choice.click();
+                    if(image.src!==document.querySelectorAll('.gallery-tile')[index].href||link.href!==image.src)throw new Error('Art index navigation '+index);
+                }
+            })()`);
+            await call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowRight',code:'ArrowRight',windowsVirtualKeyCode:39});
+            await evaluate(`if(document.querySelector('#artViewerImage').src!==document.querySelectorAll('.gallery-tile')[1].href)throw new Error('Art ArrowRight')`);
+            await call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowLeft',code:'ArrowLeft',windowsVirtualKeyCode:37});
+            await evaluate(`if(document.querySelector('#artViewerImage').src!==window.__artFirstSrc)throw new Error('Art ArrowLeft')`);
+            await pause(200);await screenshot(`art-lightbox-${width}.png`);
+            await escape();await pause(60);
+            await evaluate(`if(document.querySelector('dialog.art-lightbox').open||document.activeElement!==document.querySelector('.gallery-tile'))throw new Error('Art Escape close or focus restore')`);
+            await evaluate(`document.querySelector('.gallery-tile').click();document.querySelector('[data-art-close]').click()`);await pause(60);
+            await evaluate(`if(document.querySelector('dialog.art-lightbox').open||document.activeElement!==document.querySelector('.gallery-tile'))throw new Error('Art close button or focus restore')`);
+            console.log('PASS art viewer image / original link / next and previous / direct indexes / keyboard / focus / '+width+'px bounds');
+        }
+        await call('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+        await visit('index.html');
+        await evaluate(`document.body.dataset.weather='snow'`);await pause(150);
+    }
+    await checkRefinedComponents();
     await evaluate(`document.querySelector('#musicTrack').selectedIndex=0;document.querySelector('#musicTrack').dispatchEvent(new Event('change'));document.querySelector('#musicNext').click();if(document.querySelector('#musicTrack').selectedIndex!==1)throw new Error('Next song');document.querySelector('#musicPrevious').click();if(document.querySelector('#musicTrack').selectedIndex!==0)throw new Error('Previous song');document.body.dataset.weather='snow'`);
     const pet=await evaluate(`(() => {const r=document.querySelector('.snowman-nose').getBoundingClientRect();return {x:r.left+40,y:r.top+35}})()`);
     await call('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:pet.x,y:pet.y});

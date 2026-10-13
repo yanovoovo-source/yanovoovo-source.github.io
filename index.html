@@ -9,11 +9,15 @@
     <link rel="stylesheet" href="style.css?v=20261012-02">
     <link rel="stylesheet" href="ambience.css?v=20261012-04">
     <link rel="stylesheet" href="polish.css?v=20261012-03">
-    <script src="script.js?v=20261012-02" defer></script>
+    <link rel="stylesheet" href="refinement.css?v=20261013-01">
+    <link rel="stylesheet" href="entrance.css?v=20261013-01">
+    <script src="script.js?v=20261013-01" defer></script>
     <script src="weather.js?v=20261012-03" defer></script>
     <script src="playlist.js?v=20261012-02" defer></script>
     <script src="snowman-art.js?v=20261012-04" defer></script>
     <script src="ambience.js?v=20261012-04" defer></script>
+    <script src="enhance.js?v=20261013-01" defer></script>
+    <script src="entrance.js?v=20261013-01" defer></script>
 </head>
 <body data-theme="scene-01" data-scene="scene-01" data-weather="clear">
     <div class="world" aria-hidden="true">
@@ -59,13 +63,15 @@
                 <p class="scroll-hint">札记、藏书，还有一点闲趣</p>
             </div>
             <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
+            <div class="hero-footnote"><span>留字 / 藏书 / 听风</span><button class="entrance-replay" data-replay-entrance type="button">重看开场 <span aria-hidden="true">↗</span></button></div>
         </div>
-        <div class="scene-preview" aria-hidden="true">
+        <div class="scene-preview" aria-label="三景画窗">
             <div class="scene-preview-art"></div>
             <div class="scene-preview-caption">
                 <span class="scene-index" id="sceneIndexLabel">SCENE / 01</span>
                 <strong id="sceneMood">花灯水巷</strong>
                 <p id="sceneLine">楼影沉在水里，花枝从檐角探出来。花瓣和金屑偶尔掠过屏面。</p>
+                <div class="scene-choices" role="group" aria-label="选择山门背景"><button type="button" class="scene-choice" data-scene-choice="scene-01" aria-label="花灯水巷" aria-pressed="true"><i aria-hidden="true"></i><span>01</span></button><button type="button" class="scene-choice" data-scene-choice="scene-02" aria-label="朱门长街" aria-pressed="false"><i aria-hidden="true"></i><span>02</span></button><button type="button" class="scene-choice" data-scene-choice="scene-03" aria-label="塔影旧城" aria-pressed="false"><i aria-hidden="true"></i><span>03</span></button></div>
             </div>
         </div>
     </header>
@@ -99,22 +105,24 @@
         </section>
 
         <section class="collection-grid" aria-label="个人收藏与记录">
-            <article class="paper-card reveal">
-                <p class="card-kicker">近日手记</p><h3>刚刚学会的事</h3>
+            <article class="paper-card note-card reveal">
+                <div class="card-heading"><p class="card-kicker">近日手记</p><span class="card-folio" aria-hidden="true">01</span></div><h3>刚刚学会的事</h3>
                 <p>从一个空白文件开始，亲手搭起自己的网页。原来所谓江湖，也可以由一行一行的字筑成。</p>
+                <a class="card-link" href="journal.html">翻到下一页 <span aria-hidden="true">↗</span></a>
                 <time id="todayLabel" datetime="2026-08-26">二〇二六年八月</time>
             </article>
-            <article class="paper-card reveal">
-                <p class="card-kicker">藏书阁</p><h3>枕边有书</h3>
+            <article class="paper-card shelf-card reveal">
+                <div class="card-heading"><p class="card-kicker">藏书阁</p><span class="card-folio" aria-hidden="true">02</span></div><h3>枕边有书</h3>
                 <p>正在读的、读完舍不得合上的、只记住一句话的，都等我慢慢收进来。</p>
+                <div class="mini-shelf" aria-hidden="true"><span>山中札<small>壹</small></span><span>风物志<small>贰</small></span><span>造物小史<small>叁</small></span></div>
                 <a class="card-status card-link" href="library.html">去藏书阁看看 <span aria-hidden="true">↗</span></a>
             </article>
             <article class="paper-card image-card reveal">
                 <a class="image-window" href="gallery.html" aria-label="打开浮光掠影画廊"></a>
-                <div><p class="card-kicker">浮光掠影</p><h3>今日所见</h3><p>从一座城的灯火，到一枝探出檐角的花。把让我停下来多看一眼的画面，慢慢收进来。</p><a class="card-link" href="gallery.html">推窗看画 <span aria-hidden="true">↗</span></a></div>
+                <div><div class="card-heading"><p class="card-kicker">浮光掠影</p><span class="card-folio" aria-hidden="true">03</span></div><h3>今日所见</h3><p>从一座城的灯火，到一枝探出檐角的花。把让我停下来多看一眼的画面，慢慢收进来。</p><a class="card-link" href="gallery.html">推窗看画 <span aria-hidden="true">↗</span></a></div>
             </article>
             <article class="paper-card learn-card reveal">
-                <p class="card-kicker">今日习得</p><h3>把念头变成小东西</h3>
+                <div class="card-heading"><p class="card-kicker">今日习得</p><span class="card-folio" aria-hidden="true">04</span></div><h3>把念头变成小东西</h3>
                 <ul><li><span>HTML</span> 给网页搭骨架</li><li><span>CSS</span> 为它披上颜色与月光</li><li><span>Git</span> 把每一步留在时间里</li></ul>
             </article>
         </section>

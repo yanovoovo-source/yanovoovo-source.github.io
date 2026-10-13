@@ -1,0 +1,80 @@
+/* Two composited ink-paper leaves, with no blur or screen-sized live filter. */
+.jianghu-entrance {
+    position:fixed;
+    inset:0;
+    z-index:90;
+    overflow:hidden;
+    pointer-events:none!important;
+    user-select:none;
+    contain:strict;
+}
+.jianghu-entrance * { pointer-events:none!important; }
+.jianghu-entrance-panel {
+    position:absolute;
+    left:0;
+    width:100%;
+    height:50.15%;
+    background:repeating-linear-gradient(91deg,#e3c39e03 0 1px,transparent 1px 6px),linear-gradient(125deg,#151117,#23171c 58%,#171216);
+    will-change:transform;
+    animation-duration:780ms;
+    animation-delay:220ms;
+    animation-timing-function:cubic-bezier(.76,0,.24,1);
+    animation-fill-mode:both;
+}
+.jianghu-entrance-panel--upper {
+    top:0;
+    border-bottom:1px solid #c69a7140;
+    animation-name:jianghu-entrance-open-upper;
+}
+.jianghu-entrance-panel--lower {
+    bottom:0;
+    border-top:1px solid #c69a711f;
+    background-position:0 0,100% 100%;
+    animation-name:jianghu-entrance-open-lower;
+}
+.jianghu-entrance-mark {
+    position:absolute;
+    top:50%;
+    left:50%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:13px;
+    transform:translate(-50%,-50%);
+    color:#eedfce;
+    animation:jianghu-entrance-ink 820ms ease both;
+}
+.jianghu-entrance-word {
+    padding-left:.3em;
+    font-family:var(--serif,"Songti SC","STSong","SimSun",serif);
+    font-size:22px;
+    font-weight:400;
+    letter-spacing:.3em;
+    line-height:1.4;
+}
+.jianghu-entrance-rule { width:28px; height:1px; background:#c3986e8c; }
+.jianghu-entrance-label {
+    padding-left:.27em;
+    color:#c2a997;
+    font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:9px;
+    font-weight:400;
+    letter-spacing:.27em;
+    line-height:1.5;
+    white-space:nowrap;
+}
+@keyframes jianghu-entrance-open-upper { to { transform:translate3d(0,-101%,0); } }
+@keyframes jianghu-entrance-open-lower { to { transform:translate3d(0,101%,0); } }
+@keyframes jianghu-entrance-ink {
+    0% { opacity:0; }
+    18%,39% { opacity:1; }
+    75%,100% { opacity:0; }
+}
+@media(max-width:760px) {
+    .jianghu-entrance-word { font-size:20px; }
+    .jianghu-entrance-mark { gap:11px; }
+}
+@media(prefers-reduced-motion:reduce) {
+    .jianghu-entrance { display:none!important; }
+    .jianghu-entrance * { animation:none!important; }
+}
