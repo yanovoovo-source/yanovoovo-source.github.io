@@ -53,7 +53,7 @@ try {
         await call('Page.navigate',{url:`${origin}/${page}`});
         let ready=false;for(let i=0;i<70;i++){ready=await evaluate(`document.readyState==='complete'&&document.querySelector('#musicTrack')?.options.length===13`);if(ready)break;await pause(100)}
         if(!ready)throw new Error(`${page} did not initialize`);
-        if(page==='index.html')await evaluate(`document.fonts.ready.then(()=>{if(!document.fonts.check('40px "Jianghu Letters"','此间江湖年少偏爱纵横天下'))throw new Error('Homepage lettering font did not load')})`);
+        if(page==='index.html')await evaluate(`document.fonts.ready.then(()=>{if(!document.fonts.check('40px "Jianghu Letters"','此间江湖年少偏爱纵横天下札记习得行迹问剑未完'))throw new Error('Homepage lettering font did not load')})`);
         const checks=await evaluate(`(() => {
             document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
             const controls=[...document.querySelector('.scene-controls').children].map(el=>el.getBoundingClientRect());
@@ -322,7 +322,7 @@ try {
         await call('Page.navigate',{url:`${origin}/index.html`});
         let ready=false;for(let i=0;i<70;i++){ready=await evaluate(`document.readyState==='complete'&&!!document.querySelector('.scene-controls')&&document.querySelector('#musicTrack')?.options.length===13`);if(ready)break;await pause(100)}
         if(!ready)throw new Error('Reading path did not initialize');
-        await evaluate(`document.body.dataset.weather='clear';window.__navDocumentTop=document.querySelector('.site-nav').getBoundingClientRect().top+scrollY;document.querySelector('.collection-heading').scrollIntoView()`);await pause(450);
+        await evaluate(`document.fonts.ready.then(()=>{document.body.dataset.weather='clear';window.__navDocumentTop=document.querySelector('.site-nav').getBoundingClientRect().top+scrollY;document.querySelector('.collection-heading').scrollIntoView({behavior:'instant'})})`);await pause(450);
         await evaluate(`(() => {
             const element=document.querySelector('.site-nav'),nav=element.getBoundingClientRect();
             if(['sticky','fixed'].includes(getComputedStyle(element).position)||Math.abs(nav.top+scrollY-window.__navDocumentTop)>2||nav.bottom>0)throw new Error('Page navigation follows scrolling');
@@ -331,7 +331,8 @@ try {
         })()`);
         let shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
         fs.writeFileSync(path.join(evidence,`collection-${width}.png`),Buffer.from(shot.data,'base64'));
-        await evaluate(`document.querySelector('.future').scrollIntoView()`);await pause(450);
+        await evaluate(`document.querySelector('.future').scrollIntoView({behavior:'instant'})`);await pause(450);
+        await evaluate(`(() => {const section=document.querySelector('.future'),box=section.getBoundingClientRect();if(box.top>=innerHeight||box.bottom<=0||Number(getComputedStyle(section).opacity)<.99)throw new Error('Chapter entries are not visible after scrolling')})()`);
         shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
         fs.writeFileSync(path.join(evidence,`chapters-${width}.png`),Buffer.from(shot.data,'base64'));
     }

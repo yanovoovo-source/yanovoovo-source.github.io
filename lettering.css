@@ -1,7 +1,7 @@
 /* Static lettering and flourishes over the original ink / vermilion / old-gold palette. */
 @font-face {
     font-family:'Jianghu Letters';
-    src:url('assets/fonts/jianghu-letters.ttf?v=20261016-01') format('truetype');
+    src:url('assets/fonts/jianghu-letters.ttf?v=20261016-02') format('truetype');
     font-style:normal;
     font-weight:400;
     font-display:swap;

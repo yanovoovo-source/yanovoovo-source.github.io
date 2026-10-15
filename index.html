@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="polish.css?v=20261016-01">
     <link rel="stylesheet" href="refinement.css?v=20261016-01">
     <link rel="stylesheet" href="entrance.css?v=20261013-01">
-    <link rel="stylesheet" href="lettering.css?v=20261016-01">
-    <link rel="preload" href="assets/fonts/jianghu-letters.ttf?v=20261016-01" as="font" type="font/ttf" crossorigin>
+    <link rel="stylesheet" href="lettering.css?v=20261016-02">
+    <link rel="stylesheet" href="collage.css?v=20261016-02">
+    <link rel="preload" href="assets/fonts/jianghu-letters.ttf?v=20261016-02" as="font" type="font/ttf" crossorigin>
     <script src="script.js?v=20261015-01" defer></script>
     <script src="weather.js?v=20261012-03" defer></script>
     <script src="playlist.js?v=20261012-02" defer></script>
@@ -103,6 +104,7 @@
             </nav>
 
         <section class="intro reveal" aria-labelledby="intro-title">
+            <span class="intro-script" aria-hidden="true"><span>落笔</span><span>成章</span></span>
             <div class="intro-heading"><p class="section-number">卷一 · 自序</p>
             <h2 id="intro-title">竹影札记</h2></div>
             <p class="lead">这里收留我路过人间时捡到的东西：好看的画面，突然想记下的句子，读过的书，今天新学会的事，以及一些会说话的小机关。</p>
@@ -118,6 +120,8 @@
         <div class="collection-heading reveal"><div><p class="section-number">案头小集</p><h2>把喜欢的，留在手边。</h2></div><span>四页小物 / 随手翻阅</span><span class="collection-heading-ornament" aria-hidden="true">集</span></div>
         <section class="collection-grid" aria-label="个人收藏与记录">
             <article class="paper-card note-card reveal">
+                <span class="note-margin" aria-hidden="true">随手一页 · 留予此间</span>
+                <span class="note-script" aria-hidden="true">札记</span>
                 <div class="card-heading"><p class="card-kicker">近日手记</p><span class="card-folio" aria-hidden="true">01</span></div><h3>刚刚学会的事</h3>
                 <p>从一个空白文件开始，亲手搭起自己的网页。原来所谓江湖，也可以由一行一行的字筑成。</p>
                 <a class="card-link" href="journal.html">翻到下一页 <span aria-hidden="true">↗</span></a>
@@ -131,9 +135,10 @@
             </article>
             <article class="paper-card image-card reveal">
                 <a class="image-window" href="gallery.html" aria-label="打开浮光掠影画廊"><span class="window-index">画卷 / 03</span><span class="window-title">塔影旧城 <i aria-hidden="true">↗</i></span></a>
-                <div><div class="card-heading"><p class="card-kicker">浮光掠影</p><span class="card-folio" aria-hidden="true">03</span></div><h3>今日所见</h3><p>从一座城的灯火，到一枝探出檐角的花。把让我停下来多看一眼的画面，慢慢收进来。</p><a class="card-link" href="gallery.html">推窗看画 <span aria-hidden="true">↗</span></a></div>
+                <div class="image-caption"><span class="photo-script" aria-hidden="true">浮光<br><span>入卷</span></span><div class="card-heading"><p class="card-kicker">浮光掠影</p><span class="card-folio" aria-hidden="true">03</span></div><h3>今日所见</h3><p>从一座城的灯火，到一枝探出檐角的花。把让我停下来多看一眼的画面，慢慢收进来。</p><a class="card-link" href="gallery.html">推窗看画 <span aria-hidden="true">↗</span></a></div>
             </article>
             <article class="paper-card learn-card reveal">
+                <span class="learn-script" aria-hidden="true">习得</span>
                 <div class="card-heading"><p class="card-kicker">今日习得</p><span class="card-folio" aria-hidden="true">04</span></div><h3>把念头变成小东西</h3>
                 <ul><li><span>HTML</span> 给网页搭骨架</li><li><span>CSS</span> 为它披上颜色与月光</li><li><span>Git</span> 把每一步留在时间里</li></ul>
             </article>
@@ -141,6 +146,7 @@
 
         <section class="trail-section reveal" aria-labelledby="trail-title">
             <div class="trail-heading">
+                <span class="trail-script" aria-hidden="true">行迹</span>
                 <p class="section-number">卷一 · 行迹</p>
                 <h2 id="trail-title">最近走过的路</h2>
                 <p>一些还没有被整理成作品的片段，先把它们留在这里。</p>
@@ -153,11 +159,13 @@
         </section>
 
         <section class="mechanism reveal" aria-labelledby="mechanism-title">
-            <div><p class="section-number">卷二 · 机关匣</p><h2 id="mechanism-title">问剑签</h2><p class="mechanism-note">这是第一个会回应的小组件。心里默念一件事，再敲一下铜扣。</p><a class="qimen-home-link" href="mechanism.html#qimen"><span><strong>奇门 · 观局</strong><small>随时起局 · 看个人年命与九宫</small></span><span aria-hidden="true">↗</span></a></div>
+            <svg class="fortune-orbit" viewBox="0 0 380 380" aria-hidden="true" focusable="false"><circle cx="190" cy="190" r="170"/><circle cx="190" cy="190" r="148"/><path d="M190 4v34m0 304v34M4 190h34m304 0h34M69 69l22 22m198 198 22 22M69 311l22-22m198-198 22-22"/><path d="m190 13 5 9-5 9-5-9zm0 336 5 9-5 9-5-9zM13 190l9-5 9 5-9 5zm336 0 9-5 9 5-9 5z"/></svg>
+            <div class="mechanism-copy"><span class="mechanism-script" aria-hidden="true">问剑</span><p class="section-number">卷二 · 机关匣</p><h2 id="mechanism-title">问剑签</h2><p class="mechanism-note">这是第一个会回应的小组件。心里默念一件事，再敲一下铜扣。</p><a class="qimen-home-link" href="mechanism.html#qimen"><span><strong>奇门 · 观局</strong><small>随时起局 · 看个人年命与九宫</small></span><span aria-hidden="true">↗</span></a></div>
             <div class="fortune-box"><p id="fortuneText" aria-live="polite">剑尚在匣中，答案藏在雾里。</p><button id="fortuneButton" type="button">叩问一次</button></div>
         </section>
 
         <section class="future reveal" aria-labelledby="future-title">
+            <span class="future-script" aria-hidden="true">未完</span>
             <p class="section-number">未完待续</p><h2 id="future-title">此间仍在生长</h2>
             <p>下一次回来，也许添一页书单，也许挂一幅新画，也许再做一个能陪我聊天的 AI 小机关。</p>
             <nav class="chapter-links" aria-label="继续翻阅"><a href="journal.html"><span class="chapter-number" aria-hidden="true">01</span><span><strong>江湖札记</strong><small>留在纸上的几页心境</small></span><i aria-hidden="true">↗</i></a><a href="library.html"><span class="chapter-number" aria-hidden="true">02</span><span><strong>藏书阁</strong><small>等一本喜欢的书</small></span><i aria-hidden="true">↗</i></a><a href="gallery.html"><span class="chapter-number" aria-hidden="true">03</span><span><strong>浮光掠影</strong><small>三幅古城，推窗慢看</small></span><i aria-hidden="true">↗</i></a><a href="mechanism.html"><span class="chapter-number" aria-hidden="true">04</span><span><strong>机关匣</strong><small>叩一枚今日的问剑签</small></span><i aria-hidden="true">↗</i></a></nav>
