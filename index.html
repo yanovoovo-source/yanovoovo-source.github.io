@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="style.css?v=20261012-02">
     <link rel="stylesheet" href="ambience.css?v=20261012-04">
     <link rel="stylesheet" href="polish.css?v=20261012-03">
-    <link rel="stylesheet" href="refinement.css?v=20261013-01">
+    <link rel="stylesheet" href="refinement.css?v=20261015-01">
     <link rel="stylesheet" href="entrance.css?v=20261013-01">
-    <script src="script.js?v=20261013-01" defer></script>
+    <script src="script.js?v=20261015-01" defer></script>
     <script src="weather.js?v=20261012-03" defer></script>
     <script src="playlist.js?v=20261012-02" defer></script>
     <script src="snowman-art.js?v=20261012-04" defer></script>
@@ -20,6 +20,7 @@
     <script src="entrance.js?v=20261013-01" defer></script>
 </head>
 <body data-theme="scene-01" data-scene="scene-01" data-weather="clear">
+    <a class="skip-link" href="#jianghu">跳到山门正文</a>
     <div class="world" aria-hidden="true">
         <div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div>
         <div class="bamboo-grove bamboo-left">
@@ -59,11 +60,11 @@
             <h1>无情道<br><em>魁首</em></h1>
             <p class="hero-subtitle">执一柄剑，行一程风，留几页自己的江湖。</p>
             <div class="hero-actions">
-                <button class="entry-link" id="enterButton" type="button">翻开山门档案 <span aria-hidden="true">↘</span></button>
+                <a class="entry-link" id="enterButton" href="#jianghu">翻开山门档案 <span aria-hidden="true">↘</span></a>
                 <p class="scroll-hint">札记、藏书，还有一点闲趣</p>
             </div>
             <p class="signature-note"><span>落款</span>“当年扫射江湖病的时候，我御剑飞行躲过一劫。”</p>
-            <div class="hero-footnote"><span>留字 / 藏书 / 听风</span><button class="entrance-replay" data-replay-entrance type="button">重看开场 <span aria-hidden="true">↗</span></button></div>
+            <div class="hero-footnote"><nav class="hero-shortcuts" aria-label="随手翻阅"><a href="journal.html">札记</a><a href="library.html">藏书</a><a href="gallery.html">浮光</a><a href="mechanism.html">机关</a></nav><button class="entrance-replay" data-replay-entrance type="button">重看开场 <span aria-hidden="true">↗</span></button></div>
         </div>
         <div class="scene-preview" aria-label="三景画窗">
             <div class="scene-preview-art"></div>
@@ -99,11 +100,12 @@
 
         <section class="stats-strip reveal" aria-label="江湖档案索引">
             <div><strong>04</strong><span>已收札记</span></div>
-            <div><strong>03</strong><span>枕边藏书</span></div>
+            <div><strong>03</strong><span>藏书样例</span></div>
             <div><strong>13</strong><span>随行曲目</span></div>
             <div><strong>2026</strong><span>开始筑站</span></div>
         </section>
 
+        <div class="collection-heading reveal"><div><p class="section-number">案头小集</p><h2>把喜欢的，留在手边。</h2></div><span>四页小物 / 随手翻阅</span></div>
         <section class="collection-grid" aria-label="个人收藏与记录">
             <article class="paper-card note-card reveal">
                 <div class="card-heading"><p class="card-kicker">近日手记</p><span class="card-folio" aria-hidden="true">01</span></div><h3>刚刚学会的事</h3>
@@ -114,11 +116,11 @@
             <article class="paper-card shelf-card reveal">
                 <div class="card-heading"><p class="card-kicker">藏书阁</p><span class="card-folio" aria-hidden="true">02</span></div><h3>枕边有书</h3>
                 <p>正在读的、读完舍不得合上的、只记住一句话的，都等我慢慢收进来。</p>
-                <div class="mini-shelf" aria-hidden="true"><span>山中札<small>壹</small></span><span>风物志<small>贰</small></span><span>造物小史<small>叁</small></span></div>
+                <div class="shelf-display"><div class="mini-shelf" aria-hidden="true"><span>山中札<small>壹</small></span><span>风物志<small>贰</small></span><span>造物小史<small>叁</small></span></div><p class="shelf-display-note">三卷虚位以待<br><span>等下一本喜欢的书</span></p></div>
                 <a class="card-status card-link" href="library.html">去藏书阁看看 <span aria-hidden="true">↗</span></a>
             </article>
             <article class="paper-card image-card reveal">
-                <a class="image-window" href="gallery.html" aria-label="打开浮光掠影画廊"></a>
+                <a class="image-window" href="gallery.html" aria-label="打开浮光掠影画廊"><span class="window-index">画卷 / 03</span><span class="window-title">塔影旧城 <i aria-hidden="true">↗</i></span></a>
                 <div><div class="card-heading"><p class="card-kicker">浮光掠影</p><span class="card-folio" aria-hidden="true">03</span></div><h3>今日所见</h3><p>从一座城的灯火，到一枝探出檐角的花。把让我停下来多看一眼的画面，慢慢收进来。</p><a class="card-link" href="gallery.html">推窗看画 <span aria-hidden="true">↗</span></a></div>
             </article>
             <article class="paper-card learn-card reveal">
@@ -141,14 +143,14 @@
         </section>
 
         <section class="mechanism reveal" aria-labelledby="mechanism-title">
-            <div><p class="section-number">卷二 · 机关匣</p><h2 id="mechanism-title">问剑签</h2><p class="mechanism-note">这是第一个会回应的小组件。心里默念一件事，再敲一下铜扣。</p></div>
+            <div><p class="section-number">卷二 · 机关匣</p><h2 id="mechanism-title">问剑签</h2><p class="mechanism-note">这是第一个会回应的小组件。心里默念一件事，再敲一下铜扣。</p><a class="qimen-home-link" href="mechanism.html#qimen"><span><strong>奇门 · 观局</strong><small>随时起局 · 看个人年命与九宫</small></span><span aria-hidden="true">↗</span></a></div>
             <div class="fortune-box"><p id="fortuneText" aria-live="polite">剑尚在匣中，答案藏在雾里。</p><button id="fortuneButton" type="button">叩问一次</button></div>
         </section>
 
         <section class="future reveal" aria-labelledby="future-title">
             <p class="section-number">未完待续</p><h2 id="future-title">此间仍在生长</h2>
             <p>下一次回来，也许添一页书单，也许挂一幅新画，也许再做一个能陪我聊天的 AI 小机关。</p>
-            <div class="future-links"><a href="gallery.html">浮光</a><i>·</i><a href="journal.html">札记</a><i>·</i><a href="library.html">藏书</a><i>·</i><a href="mechanism.html">机关</a></div>
+            <nav class="chapter-links" aria-label="继续翻阅"><a href="journal.html"><span class="chapter-number" aria-hidden="true">01</span><span><strong>江湖札记</strong><small>留在纸上的几页心境</small></span><i aria-hidden="true">↗</i></a><a href="library.html"><span class="chapter-number" aria-hidden="true">02</span><span><strong>藏书阁</strong><small>等一本喜欢的书</small></span><i aria-hidden="true">↗</i></a><a href="gallery.html"><span class="chapter-number" aria-hidden="true">03</span><span><strong>浮光掠影</strong><small>三幅古城，推窗慢看</small></span><i aria-hidden="true">↗</i></a><a href="mechanism.html"><span class="chapter-number" aria-hidden="true">04</span><span><strong>机关匣</strong><small>叩一枚今日的问剑签</small></span><i aria-hidden="true">↗</i></a></nav>
         </section>
         </div>
     </main>

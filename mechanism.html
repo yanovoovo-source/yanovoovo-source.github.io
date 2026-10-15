@@ -8,17 +8,21 @@
     <link rel="stylesheet" href="style.css?v=20261012-02">
     <link rel="stylesheet" href="ambience.css?v=20261012-04">
     <link rel="stylesheet" href="polish.css?v=20261012-03">
-    <link rel="stylesheet" href="refinement.css?v=20261013-01">
+    <link rel="stylesheet" href="refinement.css?v=20261015-01">
     <link rel="stylesheet" href="entrance.css?v=20261013-01">
-    <script src="script.js?v=20261013-01" defer></script>
+    <link rel="stylesheet" href="qimen.css?v=20261015-01">
+    <script src="script.js?v=20261015-01" defer></script>
     <script src="weather.js?v=20261012-03" defer></script>
     <script src="playlist.js?v=20261012-02" defer></script>
     <script src="snowman-art.js?v=20261012-04" defer></script>
     <script src="ambience.js?v=20261012-04" defer></script>
     <script src="enhance.js?v=20261013-01" defer></script>
     <script src="entrance.js?v=20261013-01" defer></script>
+    <script src="qimen-core.js?v=20261015-01" defer></script>
+    <script src="qimen.js?v=20261015-01" defer></script>
 </head>
 <body class="inner-page" data-theme="scene-01" data-scene="scene-01" data-weather="clear">
+    <a class="skip-link" href="#page-content">跳到机关正文</a>
 <div class="world" aria-hidden="true"><div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div><div class="mist mist-two"></div><div class="snow-crown"></div><div class="snow-ground"></div></div>
 <div class="mood-particles mood-particles-overlay" id="moodParticles" aria-hidden="true"></div>
 <div class="snowman" aria-hidden="true"><span class="snowman-hat"></span><span class="snowman-scarf"></span></div>
@@ -26,7 +30,7 @@
     <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换背景：当前为花灯水巷"><span id="moodIcon" aria-hidden="true">✦</span><span id="moodName">花灯水巷</span></button>
     <button class="weather-switch" id="weatherSwitch" type="button" aria-label="切换天气：当前花落无声"><span id="weatherIcon" aria-hidden="true">❀</span><span id="weatherName">花落无声</span></button>
     <img class="signature-mark" src="assets/jianghu-emblem.png" alt="个人签名印章">
-    <main class="inner-main">
+    <main class="inner-main" id="page-content" tabindex="-1">
         <div class="page-frame">
             <header class="page-mast">
                 <a class="back-home" href="index.html">← 山门</a>
@@ -36,10 +40,38 @@
             <nav class="site-nav" aria-label="江湖页面导航">
                 <a href="index.html">山门总览</a><a href="journal.html">江湖札记</a><a href="library.html">藏书阁</a><a href="gallery.html">浮光掠影</a><a class="active" href="mechanism.html">机关匣</a>
             </nav>
-            <section class="mechanism-intro"><p class="section-number">SMALL MACHINES / 06</p><h2>问剑签</h2><p>心里默念一件事，再叩一下铜扣。答案不一定准确，但可以先给你一个继续走的理由。</p></section>
+            <section class="mechanism-intro"><p class="section-number">SMALL MACHINES / 07</p><h2>让时间，落成一盘。</h2><p>以此刻起局，也为自己留一枚随手可问的签。</p></section>
+            <section class="qimen-section" id="qimen" aria-labelledby="qimen-title">
+                <header class="qimen-heading"><div><p class="section-number">以时起局 · 随时而变</p><h2 id="qimen-title">奇门 · 观局</h2><p>时盘随时间变化，填出生日期后，再看你的年命落宫。</p></div><span class="qimen-seal" aria-hidden="true">观<br>局</span></header>
+                <form id="qimenForm" class="qimen-form">
+                    <fieldset class="qimen-profile"><legend>一 · 留个称呼</legend>
+                        <label>姓名 / 称呼<input id="qimenName" name="name" maxlength="24" autocomplete="off" placeholder="如何称呼你"></label>
+                        <label>性别<select id="qimenGender" name="gender"><option value="">暂不填写</option><option>女</option><option>男</option></select></label>
+                        <label>出生日期<input id="qimenBirth" name="birthDate" type="date" min="1900-01-01" max="2100-12-31" aria-describedby="qimenBirthNote"></label>
+                        <label>出生时间 <span class="field-optional">选填</span><input id="qimenBirthTime" name="birthTime" type="time" step="60" aria-describedby="qimenBirthNote"></label>
+                        <p id="qimenBirthNote" class="qimen-field-note">填出生日期后，按出生年干支看个人年命；年龄自动计算。若出生当天交立春，需要补充时间。</p>
+                    </fieldset>
+                    <fieldset><legend>二 · 选时，问事</legend><div class="qimen-time-fields">
+                        <label>起局时间 · 北京时间<input id="qimenTime" name="time" type="datetime-local" step="60" min="1900-01-01T00:00" max="2100-12-31T23:59" required></label>
+                        <label>想看哪一方面<select id="qimenTopic" name="topic"><option value="overview">当下运势</option><option value="work">工作推进</option><option value="study">学习创作</option><option value="social">人际沟通</option><option value="travel">出行安排</option></select></label>
+                    </div><label class="qimen-question-label">记下想问的一件事 <span class="field-optional">选填</span><input id="qimenQuestion" name="question" maxlength="120" autocomplete="off" placeholder="例如：这阵子的学习应该怎么安排？"></label>
+                    <div class="qimen-form-actions"><label class="qimen-live"><input id="qimenLive" type="checkbox" checked>随当前时间更新</label><button class="qimen-now" type="button" id="qimenNow">回到此刻</button><button class="qimen-submit" type="submit" id="qimenSubmit" disabled>起一局 <span aria-hidden="true">↗</span></button></div></fieldset>
+                </form>
+                <p id="qimenStatus" class="qimen-status" role="status">正在准备当前时盘…</p>
+                <noscript><p class="qimen-status">奇门排盘需要开启 JavaScript；其余页面内容和链接仍可正常阅读。</p></noscript>
+                <div id="qimenResult" class="qimen-result" hidden>
+                    <div class="qimen-result-heading"><div><p class="section-number" id="qimenResultTime"></p><h3 id="qimenJu" tabindex="-1"></h3><p id="qimenProfileLine"></p></div><button id="qimenSave" type="button">保存局笺 ↓</button></div>
+                    <div class="qimen-pillars" id="qimenPillars" aria-label="起局四柱"></div>
+                    <p class="qimen-chart-meta" id="qimenMeta"></p>
+                    <div class="qimen-reading-layout"><div><div class="qimen-board-label"><span>九宫时盘</span><span>上南 · 下北 / 点宫细看</span></div><div class="qimen-board" id="qimenBoard" role="group" aria-label="奇门九宫，点击查看各宫依据"></div><p class="qimen-board-note">天 / 地为天地盘干；「寄」是随天禽同转的中宫干。空、马分别标示时旬空亡与驿马。</p></div>
+                    <aside class="qimen-reading" aria-labelledby="qimenReadingTitle"><p class="section-number">本局读法</p><h3 id="qimenReadingTitle"></h3><p id="qimenQuestionDisplay" hidden></p><p id="qimenFocus"></p><p id="qimenComparison"></p><div class="qimen-reading-divider"></div><div id="qimenPalaceReading" aria-live="polite"></div></aside></div>
+                    <details class="qimen-method"><summary>这张盘是怎么排出来的 <span aria-hidden="true">＋</span></summary><ol id="qimenSteps"></ol></details>
+                </div>
+                <details class="qimen-method qimen-sources"><summary>起局口径、个人资料与依据 <span aria-hidden="true">＋</span></summary><div class="qimen-method-body"><p>本页采用时家转盘、甲己符头定三元、按交节换气的拆补口径；北京时间 UTC+8，23 时子初换日，天禽与中五寄坤，八神采用白虎、玄武这一系。未作经度或真太阳时校正。</p><p>姓名用于称呼，性别作为资料保留，不参与本页起局。个人层取出生年干支为年命，按立春分年；甲年按该年旬首所遁六仪定位。相同年命可能得到相近解读。未填出生日期时，按起局日干看当下的共同时盘。</p><p>解读展示门、星、宫五行及用神关系，白话建议为本站归纳。这里的依据是传统术数规则，不代表现实预测已获科学验证；尚未加入完整旺衰、年命合断等体系。</p><p>规则参考 <a href="https://zh.wikisource.org/zh-hans/奇門遁甲統宗" target="_blank" rel="noopener noreferrer">《奇门遁甲统宗》：定三元、阴阳遁起例、值符值使、门迫</a>；历法使用 <a href="https://github.com/6tail/lunar-javascript" target="_blank" rel="noopener noreferrer">lunar-javascript</a>（<a href="assets/vendor/lunar-LICENSE.txt" target="_blank" rel="noopener noreferrer">MIT 授权</a>）。资料只在当前页面计算。</p></div></details>
+            </section>
             <section class="mechanism-grid">
                 <article class="mechanism-widget"><h3>今日机关 · 问剑签</h3><p id="fortuneText" aria-live="polite">剑尚在匣中，答案藏在雾里。</p><button id="fortuneButton" type="button">叩问一次</button></article>
-                <article class="mechanism-list"><h3>匣中小物</h3><ul><li><span>三景切换</span><span>已完成</span></li><li><span>问剑签</span><span>已完成</span></li><li><span>听风琴匣</span><span>已完成</span></li><li><span>雪客衣柜</span><span>已完成</span></li><li><span>画卷预览</span><span>已完成</span></li><li><span>AI 小机关</span><span>待开始</span></li></ul></article>
+                <article class="mechanism-list"><h3>匣中小物</h3><ul><li><span>奇门观局</span><span>已完成</span></li><li><span>三景切换</span><span>已完成</span></li><li><span>问剑签</span><span>已完成</span></li><li><span>听风琴匣</span><span>已完成</span></li><li><span>雪客衣柜</span><span>已完成</span></li><li><span>画卷预览</span><span>已完成</span></li><li><span>AI 小机关</span><span>待开始</span></li></ul></article>
             </section>
             <details class="component-fold" open><summary><span class="fold-num">01</span><span><strong>关于小机关</strong><small>WHY MAKE SMALL THINGS</small></span></summary><div class="fold-body"><p>它们不负责解决人生，只负责在页面里留下一个可以被点击、被发现、被记住的小动作。</p></div></details>
             <details class="component-fold"><summary><span class="fold-num">02</span><span><strong>下一只匣子</strong><small>COMING LATER</small></span></summary><div class="fold-body"><p>以后也许会有一只会陪你聊天的 AI 小机关，也许只是一个随机出现的句子。</p></div></details>

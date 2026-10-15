@@ -315,6 +315,95 @@ try {
     console.log('PASS playlist / composited mouse and touch drag / wardrobe / weather / background switching / reduced motion');
     console.log('PASS loading cancellation / single-commit scrubbing / closed-player idle / volume / coalesced viewport resize / landscape pet');
     console.log('PASS six winter outfits / accessories in every outfit / reload persistence / phone and landscape wardrobe bounds');
+    // Check the real reading path and retain evidence below the first screen.
+    for (const width of [320,375,1440]) {
+        await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<761});
+        await call('Page.navigate',{url:`${origin}/index.html`});
+        let ready=false;for(let i=0;i<70;i++){ready=await evaluate(`document.readyState==='complete'&&!!document.querySelector('.scene-controls')&&document.querySelector('#musicTrack')?.options.length===13`);if(ready)break;await pause(100)}
+        if(!ready)throw new Error('Reading path did not initialize');
+        await evaluate(`document.body.dataset.weather='clear';document.querySelector('.collection-heading').scrollIntoView()`);await pause(450);
+        await evaluate(`(() => {
+            const nav=document.querySelector('.site-nav').getBoundingClientRect();
+            if(nav.top<0||nav.bottom>innerHeight)throw new Error('Reading navigation left the viewport');
+            for(const button of document.querySelectorAll('.site-nav a,.scene-choice'))if(button.getBoundingClientRect().height<44)throw new Error('Small navigation target');
+            if(document.documentElement.scrollWidth>innerWidth)throw new Error('Reading section overflows');
+        })()`);
+        let shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+        fs.writeFileSync(path.join(evidence,`collection-${width}.png`),Buffer.from(shot.data,'base64'));
+        await evaluate(`document.querySelector('.future').scrollIntoView()`);await pause(450);
+        shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+        fs.writeFileSync(path.join(evidence,`chapters-${width}.png`),Buffer.from(shot.data,'base64'));
+    }
+    // Qimen: check the browser's live clock, personal reference and real form flow.
+    const {identifier:qimenClock}=await call('Page.addScriptToEvaluateOnNewDocument',{source:`
+        window.__qimenClock=Date.parse('2026-10-15T14:59:59.900+08:00');
+        Date.now=()=>window.__qimenClock;
+    `});
+    await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});
+    await call('Page.navigate',{url:origin+'/mechanism.html#qimen'});
+    const qimenReady=async(condition,label)=>{for(let i=0;i<100;i++){if(await evaluate(condition))return;await pause(50)}throw new Error(label+' timeout')};
+    await qimenReady(`document.readyState==='complete'&&!document.querySelector('#qimenResult').hidden&&document.querySelectorAll('.qimen-cell').length===9`,'Initial current chart');
+    const oldPlate=await evaluate(`document.querySelector('#qimenBoard').textContent`);
+    await evaluate(`if(document.querySelector('#qimenTime').value!=='2026-10-15T14:59')throw new Error('Current Beijing time');window.__qimenClock=Date.parse('2026-10-15T15:00:00.100+08:00')`);
+    await qimenReady(`document.querySelector('#qimenTime').value==='2026-10-15T15:00'`,'Automatic hourly change');
+    if(await evaluate(`document.querySelector('#qimenBoard').textContent`)===oldPlate)throw new Error('Automatic time changed but the plate did not');
+    await evaluate(`document.querySelector('#qimenTime').value='2026-05-27T10:30';document.querySelector('#qimenTime').dispatchEvent(new Event('input'));document.querySelector('#qimenName').value='测试侠客';document.querySelector('#qimenGender').value='女';document.querySelector('#qimenBirth').value='1993-06-01';document.querySelector('#qimenQuestion').value='<img src=x onerror=alert(1)>';document.querySelector('#qimenTopic').value='work';document.querySelector('#qimenForm').requestSubmit()`);
+    await qimenReady(`document.querySelector('#qimenProfileLine').textContent.includes('癸酉')`,'Personal year stem');
+    await evaluate(`(() => {
+        const profile=document.querySelector('#qimenProfileLine').textContent;
+        if(!profile.includes('32 周岁')||!profile.includes('艮八')||!profile.includes('女'))throw new Error('Personal age or palace');
+        if(!document.querySelector('#qimenFocus').textContent.includes('开门'))throw new Error('Topic reference');
+        if(document.querySelector('#qimenQuestionDisplay img')||document.querySelector('#qimenQuestionDisplay').textContent!=='所问：<img src=x onerror=alert(1)>')throw new Error('Question escaping');
+        window.__qimenClock=Date.parse('2026-10-16T12:00:00+08:00');document.dispatchEvent(new Event('visibilitychange'));
+        if(document.querySelector('#qimenTime').value!=='2026-05-27T10:30'||document.querySelector('#qimenLive').checked)throw new Error('Fixed time overwritten by live clock');
+    })()`);
+    const firstPersonal=await evaluate(`document.querySelector('#qimenComparison').textContent`);
+    await evaluate(`document.querySelector('#qimenBirth').value='1995-06-01';document.querySelector('#qimenQuestion').value='这阵子的学习应该怎么安排？';document.querySelector('#qimenForm').requestSubmit()`);
+    await qimenReady(`document.querySelector('#qimenProfileLine').textContent.includes('乙亥')`,'Different personal reference');
+    if(await evaluate(`document.querySelector('#qimenComparison').textContent`)===firstPersonal)throw new Error('Different year stem did not change personal analysis');
+    await evaluate(`document.querySelector('[data-palace="5"]').click();if(!document.querySelector('#qimenPalaceReading').textContent.includes('中宫不单独排门'))throw new Error('Palace detail');if(document.querySelectorAll('.qimen-cell[aria-pressed="true"]').length!==1)throw new Error('Palace selected state')`);
+    await call('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:evidence});
+    await evaluate(`document.querySelector('#qimenSave').click()`);
+    const exported=path.join(evidence,'奇门观局_202605271030.txt');
+    for(let i=0;i<40&&!fs.existsSync(exported);i++)await pause(50);
+    if(!fs.existsSync(exported)||!fs.readFileSync(exported,'utf8').includes('乙亥年命'))throw new Error('Qimen text export');
+    await evaluate(`document.querySelector('#qimenBirth').value='2100-01-01';document.querySelector('#qimenForm').requestSubmit()`);
+    await qimenReady(`document.querySelector('#qimenStatus').classList.contains('is-error')`,'Invalid birth date feedback');
+    await evaluate(`if(!document.querySelector('#qimenResult').hidden)throw new Error('Stale reading shown after invalid input');document.querySelector('#qimenBirth').value='1993-06-01';document.querySelector('#qimenForm').requestSubmit()`);
+    await qimenReady(`!document.querySelector('#qimenResult').hidden`,'Retry after invalid birth date');
+    for(const width of [320,375,1440]){
+        await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<761});await pause(220);
+        await evaluate(`(() => {document.querySelector('#qimen').scrollIntoView();if(document.documentElement.scrollWidth>innerWidth)throw new Error('Qimen page overflow');for(const el of document.querySelectorAll('.qimen-cell,.qimen-form input,.qimen-form select')){const r=el.getBoundingClientRect();if(r.width<1||r.right>innerWidth+1||r.left<0)throw new Error('Qimen control outside viewport')}})()`);await pause(350);
+        let shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});fs.writeFileSync(path.join(evidence,`qimen-form-${width}.png`),Buffer.from(shot.data,'base64'));
+        await evaluate(`document.querySelector('#qimenResult').scrollIntoView()`);await pause(350);
+        shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});fs.writeFileSync(path.join(evidence,`qimen-board-${width}.png`),Buffer.from(shot.data,'base64'));
+    }
+    await evaluate(`document.querySelector('#qimenNow').click()`);
+    await qimenReady(`document.querySelector('#qimenTime').value==='2026-10-16T12:00'`,'Return to current time');
+    await call('Page.removeScriptToEvaluateOnNewDocument',{identifier:qimenClock});
+    console.log('PASS Qimen automatic hour change / Beijing clock / fixed time / personal palaces and age / topic / safe question text / nine palace details / invalid input recovery / text download / 320, 375, 1440px');
+    // Block application scripts to verify progressive enhancement and native links.
+    await call('Emulation.setDeviceMetricsOverride',{width:375,height:900,deviceScaleFactor:1,mobile:true});
+    await call('Network.enable');
+    await call('Network.setBlockedURLs',{urls:['*.js*']});
+    await call('Page.navigate',{url:`${origin}/index.html`});
+    let plainReady=false;for(let i=0;i<70;i++){plainReady=await evaluate(`document.readyState==='complete'&&!!document.querySelector('.chapter-links')`);if(plainReady)break;await pause(100)}
+    if(!plainReady)throw new Error('Plain HTML did not load');
+    await evaluate(`(() => {
+        if(document.querySelector('.scene-controls'))throw new Error('Script blocking did not take effect');
+        if([...document.querySelectorAll('.reveal')].some(el=>getComputedStyle(el).opacity!=='1'))throw new Error('Content hidden without JavaScript');
+        if(document.documentElement.scrollWidth>innerWidth)throw new Error('Plain HTML overflows');
+        document.querySelector('.skip-link').focus();
+    })()`);
+    await call('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+    await call('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+    await pause(100);
+    await evaluate(`if(document.activeElement!==document.querySelector('main'))throw new Error('Keyboard skip link did not focus the content')`);
+    await evaluate(`document.querySelector('.hero-shortcuts a').click()`);await pause(200);
+    await evaluate(`if(!location.pathname.endsWith('/journal.html')||!document.querySelector('.journal-list'))throw new Error('Plain chapter navigation failed')`);
+    await call('Network.setBlockedURLs',{urls:[]});
+    console.log('PASS sticky reading navigation / 44px targets / lower-page screenshots at 320, 375 and 1440px');
+    console.log('PASS content visible without JavaScript / native chapter navigation / keyboard skip link');
     console.log('Screenshots: '+evidence);
 } finally {
     if(ws)ws.close();chrome.kill();await new Promise(resolve=>server.close(resolve));

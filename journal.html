@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="style.css?v=20261012-02">
     <link rel="stylesheet" href="ambience.css?v=20261012-04">
     <link rel="stylesheet" href="polish.css?v=20261012-03">
-    <link rel="stylesheet" href="refinement.css?v=20261013-01">
+    <link rel="stylesheet" href="refinement.css?v=20261015-01">
     <link rel="stylesheet" href="entrance.css?v=20261013-01">
-    <script src="script.js?v=20261013-01" defer></script>
+    <script src="script.js?v=20261015-01" defer></script>
     <script src="weather.js?v=20261012-03" defer></script>
     <script src="playlist.js?v=20261012-02" defer></script>
     <script src="snowman-art.js?v=20261012-04" defer></script>
@@ -19,6 +19,7 @@
     <script src="entrance.js?v=20261013-01" defer></script>
 </head>
 <body class="inner-page" data-theme="scene-01" data-scene="scene-01" data-weather="clear">
+    <a class="skip-link" href="#page-content">跳到札记正文</a>
 <div class="world" aria-hidden="true"><div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div><div class="mist mist-one"></div><div class="snow-crown"></div><div class="snow-ground"></div></div>
 <div class="mood-particles mood-particles-overlay" id="moodParticles" aria-hidden="true"></div>
 <div class="snowman" aria-hidden="true"><span class="snowman-hat"></span><span class="snowman-scarf"></span></div>
@@ -26,7 +27,7 @@
     <button class="mood-switch" id="moodSwitch" type="button" aria-label="切换背景：当前为花灯水巷"><span id="moodIcon" aria-hidden="true">✦</span><span id="moodName">花灯水巷</span></button>
     <button class="weather-switch" id="weatherSwitch" type="button" aria-label="切换天气：当前花落无声"><span id="weatherIcon" aria-hidden="true">❀</span><span id="weatherName">花落无声</span></button>
     <img class="signature-mark" src="assets/jianghu-emblem.png" alt="个人签名印章">
-    <main class="inner-main">
+    <main class="inner-main" id="page-content" tabindex="-1">
         <div class="page-frame">
             <header class="page-mast">
                 <a class="back-home" href="index.html">← 山门</a>
