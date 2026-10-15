@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const evidence = fs.mkdtempSync(path.join(os.tmpdir(), 'jianghu-check-'));
-const mime = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.png':'image/png','.jpg':'image/jpeg'};
+const mime = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.png':'image/png','.jpg':'image/jpeg','.ttf':'font/ttf'};
 const server = http.createServer((req,res) => {
     const relative = decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\/+/, '') || 'index.html';
     const file = path.resolve(root,relative);
@@ -53,6 +53,7 @@ try {
         await call('Page.navigate',{url:`${origin}/${page}`});
         let ready=false;for(let i=0;i<70;i++){ready=await evaluate(`document.readyState==='complete'&&document.querySelector('#musicTrack')?.options.length===13`);if(ready)break;await pause(100)}
         if(!ready)throw new Error(`${page} did not initialize`);
+        if(page==='index.html')await evaluate(`document.fonts.ready.then(()=>{if(!document.fonts.check('40px "Jianghu Letters"','此间江湖年少偏爱纵横天下'))throw new Error('Homepage lettering font did not load')})`);
         const checks=await evaluate(`(() => {
             document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
             const controls=[...document.querySelector('.scene-controls').children].map(el=>el.getBoundingClientRect());
@@ -70,7 +71,7 @@ try {
             const delta=name=>Math.round(((after.find(m=>m.name===name)?.value||0)-(before.find(m=>m.name===name)?.value||0))*1000);
             console.log(JSON.stringify({width,weather,...frames,taskMs:delta('TaskDuration'),layoutMs:delta('LayoutDuration'),styleMs:delta('RecalcStyleDuration')}));
         }
-        if(page==='index.html'&&(width===375||width===1440)){
+        if(page==='index.html'){
             await pause(450);const shot=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});fs.writeFileSync(path.join(evidence,`home-${width}.png`),Buffer.from(shot.data,'base64'));
         }
     }

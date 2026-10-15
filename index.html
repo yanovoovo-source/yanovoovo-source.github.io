@@ -8,9 +8,11 @@
     <title>无情道魁首</title>
     <link rel="stylesheet" href="style.css?v=20261012-02">
     <link rel="stylesheet" href="ambience.css?v=20261012-04">
-    <link rel="stylesheet" href="polish.css?v=20261015-02">
-    <link rel="stylesheet" href="refinement.css?v=20261015-02">
+    <link rel="stylesheet" href="polish.css?v=20261016-01">
+    <link rel="stylesheet" href="refinement.css?v=20261016-01">
     <link rel="stylesheet" href="entrance.css?v=20261013-01">
+    <link rel="stylesheet" href="lettering.css?v=20261016-01">
+    <link rel="preload" href="assets/fonts/jianghu-letters.ttf?v=20261016-01" as="font" type="font/ttf" crossorigin>
     <script src="script.js?v=20261015-01" defer></script>
     <script src="weather.js?v=20261012-03" defer></script>
     <script src="playlist.js?v=20261012-02" defer></script>
@@ -19,7 +21,7 @@
     <script src="enhance.js?v=20261013-01" defer></script>
     <script src="entrance.js?v=20261013-01" defer></script>
 </head>
-<body data-theme="scene-01" data-scene="scene-01" data-weather="clear">
+<body class="lettered-home" data-theme="scene-01" data-scene="scene-01" data-weather="clear">
     <a class="skip-link" href="#jianghu">跳到山门正文</a>
     <div class="world" aria-hidden="true">
         <div class="moon"></div><div class="stars"></div><div class="weather-rain"></div><div class="weather-snow"></div>
@@ -54,10 +56,17 @@
     </button>
     <img class="signature-mark" src="assets/jianghu-emblem.png" alt="个人签名印章">
 
-    <header class="hero">
+    <header class="hero wordart-hero">
         <div class="hero-copy">
             <p class="hero-mark">私人数字居所 <span>·</span> 一隅江湖</p>
             <h1>无情道<br><em>魁首</em></h1>
+            <div class="jianghu-lettering">
+                <span class="lettering-ghost" aria-hidden="true">江湖</span>
+                <svg class="lettering-ornament" viewBox="0 0 550 242" aria-hidden="true" focusable="false"><path d="M26 99v54m-4-7 4 8 4-8M57 117c83-24 180 2 285-19 18-4 38-12 59-10M115 194c53 9 110 13 169 6 69-9 123-3 198 2M395 42h37m-19-9v18M492 96l5 8 5-8-5-8z"/><path opacity=".35" d="M72 123c70-17 142 4 224-9M124 199c57 12 96 11 137 5M439 32h28m-14-8v16"/></svg>
+                <p class="lettering-poem"><span class="lettering-here">此间</span><span class="lettering-jianghu">江湖</span><span class="lettering-young">年少</span><span class="lettering-love">偏爱</span><span class="lettering-world">纵横天下</span></p>
+                <span class="lettering-seal" aria-hidden="true"><span>年少</span><span>自在</span></span>
+                <span class="lettering-index" aria-hidden="true">JIANGHU / 山门</span><span class="lettering-freedom" aria-hidden="true">一隅 · 自在</span>
+            </div>
             <p class="hero-subtitle">执一柄剑，行一程风，留几页自己的江湖。</p>
             <div class="hero-actions">
                 <a class="entry-link" id="enterButton" href="#jianghu">翻开山门档案 <span aria-hidden="true">↘</span></a>
@@ -68,6 +77,7 @@
         </div>
         <div class="scene-preview" aria-label="三景画窗">
             <div class="scene-preview-art"></div>
+            <span class="painting-caption-tag" aria-hidden="true">浮光入卷</span>
             <div class="scene-preview-caption">
                 <span class="scene-index" id="sceneIndexLabel">SCENE / 01</span>
                 <strong id="sceneMood">花灯水巷</strong>
@@ -105,7 +115,7 @@
             <div><strong>2026</strong><span>开始筑站</span></div>
         </section>
 
-        <div class="collection-heading reveal"><div><p class="section-number">案头小集</p><h2>把喜欢的，留在手边。</h2></div><span>四页小物 / 随手翻阅</span></div>
+        <div class="collection-heading reveal"><div><p class="section-number">案头小集</p><h2>把喜欢的，留在手边。</h2></div><span>四页小物 / 随手翻阅</span><span class="collection-heading-ornament" aria-hidden="true">集</span></div>
         <section class="collection-grid" aria-label="个人收藏与记录">
             <article class="paper-card note-card reveal">
                 <div class="card-heading"><p class="card-kicker">近日手记</p><span class="card-folio" aria-hidden="true">01</span></div><h3>刚刚学会的事</h3>
