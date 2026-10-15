@@ -321,10 +321,10 @@ try {
         await call('Page.navigate',{url:`${origin}/index.html`});
         let ready=false;for(let i=0;i<70;i++){ready=await evaluate(`document.readyState==='complete'&&!!document.querySelector('.scene-controls')&&document.querySelector('#musicTrack')?.options.length===13`);if(ready)break;await pause(100)}
         if(!ready)throw new Error('Reading path did not initialize');
-        await evaluate(`document.body.dataset.weather='clear';document.querySelector('.collection-heading').scrollIntoView()`);await pause(450);
+        await evaluate(`document.body.dataset.weather='clear';window.__navDocumentTop=document.querySelector('.site-nav').getBoundingClientRect().top+scrollY;document.querySelector('.collection-heading').scrollIntoView()`);await pause(450);
         await evaluate(`(() => {
-            const nav=document.querySelector('.site-nav').getBoundingClientRect();
-            if(nav.top<0||nav.bottom>innerHeight)throw new Error('Reading navigation left the viewport');
+            const element=document.querySelector('.site-nav'),nav=element.getBoundingClientRect();
+            if(['sticky','fixed'].includes(getComputedStyle(element).position)||Math.abs(nav.top+scrollY-window.__navDocumentTop)>2||nav.bottom>0)throw new Error('Page navigation follows scrolling');
             for(const button of document.querySelectorAll('.site-nav a,.scene-choice'))if(button.getBoundingClientRect().height<44)throw new Error('Small navigation target');
             if(document.documentElement.scrollWidth>innerWidth)throw new Error('Reading section overflows');
         })()`);
@@ -402,7 +402,7 @@ try {
     await evaluate(`document.querySelector('.hero-shortcuts a').click()`);await pause(200);
     await evaluate(`if(!location.pathname.endsWith('/journal.html')||!document.querySelector('.journal-list'))throw new Error('Plain chapter navigation failed')`);
     await call('Network.setBlockedURLs',{urls:[]});
-    console.log('PASS sticky reading navigation / 44px targets / lower-page screenshots at 320, 375 and 1440px');
+    console.log('PASS page navigation scrolls away / 44px targets / lower-page screenshots at 320, 375 and 1440px');
     console.log('PASS content visible without JavaScript / native chapter navigation / keyboard skip link');
     console.log('Screenshots: '+evidence);
 } finally {
